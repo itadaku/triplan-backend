@@ -2,12 +2,17 @@ package com.example.backend.controller
 
 import com.example.backend.domain.models.User
 import com.example.backend.domain.service.impl.UserServiceImpl
+import com.example.backend.dto.response.AlreadyExistsException
+import com.example.backend.dto.response.ErrorResponse
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.security.MessageDigest
 import java.util.Date
+import javax.servlet.http.HttpServletRequest
 import kotlin.random.Random
 
 @RestController
@@ -29,6 +34,11 @@ class UserController {
 
     @PostMapping("api/v1/user/register")
     fun registUser(@RequestBody user: User): User {
+        var findByNameUsers = userServiceImpl.findByName(user.name)
+        if(!findByNameUsers.isEmpty()){
+            throw AlreadyExistsException("already exist")
+        }
+
         user.createdAt = Date()
         user.updatedAt = Date()
         // パスワードをハッシュ化
@@ -42,5 +52,10 @@ class UserController {
         var saveUser = userServiceImpl.save(user)
 //        saveUser.password = null
         return saveUser
+    }
+
+    @ExceptionHandler(AlreadyExistsException::class)
+    fun userAlreadyExistsExeption(req: HttpServletRequest, error: AlreadyExistsException): ResponseEntity<ErrorResponse> {
+        return ErrorResponse.createResponse(error)
     }
 }

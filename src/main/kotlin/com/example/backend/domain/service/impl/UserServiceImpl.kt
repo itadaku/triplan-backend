@@ -15,4 +15,8 @@ class UserServiceImpl : UserService {
         userRepository.save(user)
         return user
     }
+
+    fun findByName(name: String?) : List<User> {
+        return userRepository.findByName(name)
+    }
 }
