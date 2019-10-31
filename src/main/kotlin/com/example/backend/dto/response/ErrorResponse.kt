@@ -8,5 +8,9 @@ class ErrorResponse(var message: String) {
         fun createResponse(e: AlreadyExistsException) : ResponseEntity<ErrorResponse> {
             return ResponseEntity<ErrorResponse>(ErrorResponse(e.errorMessage), HttpStatus.BAD_REQUEST)
         }
+
+        fun createUsedEmailResponse(e: UsedEmailException) : ResponseEntity<ErrorResponse> {
+            return ResponseEntity<ErrorResponse>(ErrorResponse(e.errorMessage), HttpStatus.BAD_REQUEST)
+        }
     }
 }

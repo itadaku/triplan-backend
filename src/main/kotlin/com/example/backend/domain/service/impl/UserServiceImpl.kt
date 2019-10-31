@@ -19,4 +19,8 @@ class UserServiceImpl : UserService {
     fun findByName(name: String?) : List<User> {
         return userRepository.findByName(name)
     }
+
+    fun findByEmail(email: String?) : List<User>{
+        return userRepository.findByEmail(email)
+    }
 }

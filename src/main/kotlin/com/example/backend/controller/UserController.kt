@@ -4,6 +4,7 @@ import com.example.backend.domain.models.User
 import com.example.backend.domain.service.impl.UserServiceImpl
 import com.example.backend.dto.response.AlreadyExistsException
 import com.example.backend.dto.response.ErrorResponse
+import com.example.backend.dto.response.UsedEmailException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -35,8 +36,12 @@ class UserController {
     @PostMapping("api/v1/user/register")
     fun registUser(@RequestBody user: User): User {
         var findByNameUsers = userServiceImpl.findByName(user.name)
-        if(!findByNameUsers.isEmpty()){
+        if(findByNameUsers.isNotEmpty()){
             throw AlreadyExistsException("already exist")
+        }
+        var findByEmailUsers = userServiceImpl.findByEmail(user.email)
+        if(findByEmailUsers.isNotEmpty()){
+            throw UsedEmailException("used email")
         }
 
         user.createdAt = Date()
@@ -57,5 +62,10 @@ class UserController {
     @ExceptionHandler(AlreadyExistsException::class)
     fun userAlreadyExistsExeption(req: HttpServletRequest, error: AlreadyExistsException): ResponseEntity<ErrorResponse> {
         return ErrorResponse.createResponse(error)
+    }
+
+    @ExceptionHandler(UsedEmailException::class)
+    fun usedEmailException(req: HttpServletRequest, error: UsedEmailException): ResponseEntity<ErrorResponse> {
+        return ErrorResponse.createUsedEmailResponse(error)
     }
 }
