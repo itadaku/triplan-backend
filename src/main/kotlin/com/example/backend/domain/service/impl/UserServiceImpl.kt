@@ -23,4 +23,8 @@ class UserServiceImpl : UserService {
     fun findByEmail(email: String?) : List<User>{
         return userRepository.findByEmail(email)
     }
+
+    fun findByEmailAndPassword(email: String?, password: String?) : List<User> {
+        return userRepository.findByEmailAndPassword(email, password)
+    }
 }

@@ -5,6 +5,7 @@ import com.example.backend.domain.service.impl.UserServiceImpl
 import com.example.backend.dto.response.AlreadyExistsException
 import com.example.backend.dto.response.ErrorResponse
 import com.example.backend.dto.response.UsedEmailException
+import com.example.backend.dto.response.UserIsNoneException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -59,6 +60,21 @@ class UserController {
         return saveUser
     }
 
+    @PostMapping("api/v1/user/login")
+    fun loginUser(@RequestBody user: User): User {
+        user.password = MessageDigest.getInstance("SHA-256")
+                .digest(user.password?.toByteArray())
+                .joinToString(separator="") {
+                    "%02x".format(it)
+                }
+        var findUser = userServiceImpl.findByEmailAndPassword(user.email, user.password)
+        // 見つからない場合の処理
+        if(findUser.isEmpty()) {
+            throw UserIsNoneException("email or password is wrong")
+        }
+        return findUser[0]
+    }
+
     @ExceptionHandler(AlreadyExistsException::class)
     fun userAlreadyExistsExeption(req: HttpServletRequest, error: AlreadyExistsException): ResponseEntity<ErrorResponse> {
         return ErrorResponse.createResponse(error)
@@ -67,5 +83,10 @@ class UserController {
     @ExceptionHandler(UsedEmailException::class)
     fun usedEmailException(req: HttpServletRequest, error: UsedEmailException): ResponseEntity<ErrorResponse> {
         return ErrorResponse.createUsedEmailResponse(error)
+    }
+
+    @ExceptionHandler(UserIsNoneException::class)
+    fun usedEmailException(req: HttpServletRequest, error: UserIsNoneException): ResponseEntity<ErrorResponse> {
+        return ErrorResponse.createUserIsNoneResponse(error)
     }
 }

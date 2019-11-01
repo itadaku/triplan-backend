@@ -12,5 +12,9 @@ class ErrorResponse(var message: String) {
         fun createUsedEmailResponse(e: UsedEmailException) : ResponseEntity<ErrorResponse> {
             return ResponseEntity<ErrorResponse>(ErrorResponse(e.errorMessage), HttpStatus.BAD_REQUEST)
         }
+
+        fun createUserIsNoneResponse(e: UserIsNoneException) : ResponseEntity<ErrorResponse> {
+            return ResponseEntity<ErrorResponse>(ErrorResponse(e.errorMessage), HttpStatus.BAD_REQUEST)
+        }
     }
 }
