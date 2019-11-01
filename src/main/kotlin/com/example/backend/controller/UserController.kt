@@ -34,11 +34,11 @@ class UserController {
     fun registUser(@RequestBody user: User): User {
         var findByNameUsers = userServiceImpl.findByName(user.name)
         if(findByNameUsers.isNotEmpty()){
-            throw AlreadyExistsException("already exist")
+            throw CommonException("already exist user", HttpStatus.BAD_REQUEST)
         }
         var findByEmailUsers = userServiceImpl.findByEmail(user.email)
         if(findByEmailUsers.isNotEmpty()){
-            throw UsedEmailException("used email")
+            throw CommonException("used email", HttpStatus.BAD_REQUEST)
         }
 
         user.createdAt = Date()
@@ -66,7 +66,7 @@ class UserController {
         var findUser = userServiceImpl.findByEmailAndPassword(user.email, user.password)
         // 見つからない場合の処理
         if(findUser.isEmpty()) {
-            throw UserIsNoneException("email or password is wrong")
+            throw CommonException("email or password is wrong", HttpStatus.BAD_REQUEST)
         }
         return findUser[0]
     }
@@ -127,20 +127,5 @@ class UserController {
         userServiceImpl.updateUser(findUser[0])
 
         return findUser[0]
-    }
-
-    @ExceptionHandler(AlreadyExistsException::class)
-    fun userAlreadyExistsExeption(req: HttpServletRequest, error: AlreadyExistsException): ResponseEntity<ErrorResponse> {
-        return ErrorResponse.createResponse(error)
-    }
-
-    @ExceptionHandler(UsedEmailException::class)
-    fun usedEmailException(req: HttpServletRequest, error: UsedEmailException): ResponseEntity<ErrorResponse> {
-        return ErrorResponse.createUsedEmailResponse(error)
-    }
-
-    @ExceptionHandler(UserIsNoneException::class)
-    fun usedEmailException(req: HttpServletRequest, error: UserIsNoneException): ResponseEntity<ErrorResponse> {
-        return ErrorResponse.createUserIsNoneResponse(error)
     }
 }
