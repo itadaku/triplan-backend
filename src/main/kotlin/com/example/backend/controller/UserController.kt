@@ -97,6 +97,38 @@ class UserController {
         return deletedUser.isEmpty()
     }
 
+    @RequestMapping(path = ["api/v1/user"], method = [RequestMethod.PUT, RequestMethod.PATCH])
+    fun updateUser(@RequestParam token: String, @RequestBody user: User): User {
+        var findUser = userServiceImpl.findByToken(token)
+        if(findUser.isEmpty()){
+            throw CommonException("Invalid Token", HttpStatus.BAD_REQUEST)
+        }
+
+        if(!user.name.isNullOrBlank()) findUser[0].name = user.name
+        if(!user.password.isNullOrBlank()){
+            user.password = MessageDigest.getInstance("SHA-256")
+                    .digest(user.password?.toByteArray())
+                    .joinToString(separator="") {
+                        "%02x".format(it)
+                    }
+            findUser[0].password = user.password
+        }
+        if(!user.email.isNullOrBlank()) {
+            var emailFindUser = userServiceImpl.findByEmail(user.email)
+            if(emailFindUser.isNotEmpty()){
+                throw CommonException("Email Used", HttpStatus.BAD_REQUEST)
+            }
+            findUser[0].email = user.email
+        }
+        if(user.age != null) findUser[0].age = user.age
+        if(user.gender != null) findUser[0].gender = user.gender
+        if(user.lineStationId != null) findUser[0].lineStationId = user.lineStationId
+
+        userServiceImpl.updateUser(findUser[0])
+
+        return findUser[0]
+    }
+
     @ExceptionHandler(AlreadyExistsException::class)
     fun userAlreadyExistsExeption(req: HttpServletRequest, error: AlreadyExistsException): ResponseEntity<ErrorResponse> {
         return ErrorResponse.createResponse(error)

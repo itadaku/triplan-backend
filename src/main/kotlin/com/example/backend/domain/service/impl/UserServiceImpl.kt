@@ -35,4 +35,8 @@ class UserServiceImpl : UserService {
     fun deleteUser(id: Int) {
         userRepository.deleteById(id)
     }
+
+    fun updateUser(user: User){
+        userRepository.save(user)
+    }
 }
