@@ -31,4 +31,8 @@ class UserServiceImpl : UserService {
     fun findByToken(token: String?) : List<User> {
         return userRepository.findByToken(token)
     }
+
+    fun deleteUser(id: Int) {
+        userRepository.deleteById(id)
+    }
 }

@@ -82,6 +82,21 @@ class UserController {
         return findUser[0]
     }
 
+    @DeleteMapping("api/v1/user")
+    fun deleteUser(@RequestParam token: String): Boolean{
+        var findUser = userServiceImpl.findByToken(token)
+        if(findUser.isEmpty()){
+            throw CommonException("Invalid Token", HttpStatus.BAD_REQUEST)
+        }
+        var intId = findUser[0].id
+        if (intId != null) {
+            userServiceImpl.deleteUser(intId)
+        }
+
+        var deletedUser = userServiceImpl.findByToken(token)
+        return deletedUser.isEmpty()
+    }
+
     @ExceptionHandler(AlreadyExistsException::class)
     fun userAlreadyExistsExeption(req: HttpServletRequest, error: AlreadyExistsException): ResponseEntity<ErrorResponse> {
         return ErrorResponse.createResponse(error)
