@@ -16,5 +16,9 @@ class ErrorResponse(var message: String) {
         fun createUserIsNoneResponse(e: UserIsNoneException) : ResponseEntity<ErrorResponse> {
             return ResponseEntity<ErrorResponse>(ErrorResponse(e.errorMessage), HttpStatus.BAD_REQUEST)
         }
+
+        fun createCommonResponse(e: CommonException) : ResponseEntity<ErrorResponse> {
+            return ResponseEntity<ErrorResponse>(ErrorResponse(e.errorMessage), e.status)
+        }
     }
 }

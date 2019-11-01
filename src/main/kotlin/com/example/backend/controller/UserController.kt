@@ -2,16 +2,12 @@ package com.example.backend.controller
 
 import com.example.backend.domain.models.User
 import com.example.backend.domain.service.impl.UserServiceImpl
-import com.example.backend.dto.response.AlreadyExistsException
-import com.example.backend.dto.response.ErrorResponse
-import com.example.backend.dto.response.UsedEmailException
-import com.example.backend.dto.response.UserIsNoneException
+import com.example.backend.dto.response.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
 import java.security.MessageDigest
 import java.util.Date
 import javax.servlet.http.HttpServletRequest
@@ -72,6 +68,17 @@ class UserController {
         if(findUser.isEmpty()) {
             throw UserIsNoneException("email or password is wrong")
         }
+        return findUser[0]
+    }
+
+    @GetMapping("api/v1/user")
+    fun getUser(@RequestParam token: String): User{
+        var findUser = userServiceImpl.findByToken(token)
+
+        if(findUser.isEmpty()){
+            throw CommonException("Invalid Token", HttpStatus.BAD_REQUEST)
+        }
+
         return findUser[0]
     }
 
