@@ -1,10 +1,12 @@
 package com.example.backend.domain.models
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import java.util.Date
 import javax.persistence.*
 
 @Entity
 @Table(name = "users")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class User (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

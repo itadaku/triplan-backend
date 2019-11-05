@@ -15,4 +15,28 @@ class UserServiceImpl : UserService {
         userRepository.save(user)
         return user
     }
+
+    fun findByName(name: String?) : List<User> {
+        return userRepository.findByName(name)
+    }
+
+    fun findByEmail(email: String?) : List<User>{
+        return userRepository.findByEmail(email)
+    }
+
+    fun findByEmailAndPassword(email: String?, password: String?) : List<User> {
+        return userRepository.findByEmailAndPassword(email, password)
+    }
+
+    fun findByToken(token: String?) : List<User> {
+        return userRepository.findByToken(token)
+    }
+
+    fun deleteUser(id: Int) {
+        userRepository.deleteById(id)
+    }
+
+    fun updateUser(user: User){
+        userRepository.save(user)
+    }
 }
