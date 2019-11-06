@@ -33,6 +33,11 @@ class UserController {
                 }
     }
 
+    @GetMapping("/")
+    fun testGet(): String {
+        return "Hello World"
+    }
+
     @PostMapping("api/v1/user/register")
     fun registUser(@RequestBody user: User): User {
         val findByNameUsers = userServiceImpl.findByName(user.name)
