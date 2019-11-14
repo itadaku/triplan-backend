@@ -1,9 +1,9 @@
-package com.example.backend.domain.models
+package com.example.backend.domain.models.response
 
 import javax.persistence.Entity
 import javax.persistence.Id
 
-data class TopPlan (
+data class TopPlanResponse (
     var id: Int? = null,
     var title: String? = null,
     var image: String? = null,

@@ -1,4 +1,4 @@
-package com.example.backend.domain.models
+package com.example.backend.domain.models.response
 
 data class ReviewClass (
     var sentence: String? = null,
