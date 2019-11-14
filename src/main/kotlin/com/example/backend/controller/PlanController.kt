@@ -1,8 +1,6 @@
 package com.example.backend.controller
 
-import com.example.backend.domain.models.PlanInfoElement
-import com.example.backend.domain.models.PlanType
-import com.example.backend.domain.models.TopPlan
+import com.example.backend.domain.models.*
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -129,4 +127,41 @@ class PlanController {
 
         return res
     }
+
+    @GetMapping("/api/v1/plan/detail")
+    fun getPlanInfoDetail(@RequestParam id: Int): PlanDetailResponse{
+        var res = PlanDetailResponse()
+        res.id = 1
+        res.title = "観光"
+        res.body = "美術館"
+        res.review = 3.7
+        res.link = "http://sample.com"
+
+        var imagePath1 = ImageClass()
+        imagePath1.image_path = "none"
+        imagePath1.image_type = ImageType.MAIN.id
+        var imagePath2 = ImageClass()
+        imagePath2.image_path = "none"
+        imagePath2.image_type = ImageType.SUB.id
+        res.image_paths += imagePath1
+        res.image_paths += imagePath2
+
+        var reviewClass1 = ReviewClass()
+        reviewClass1.body = "おもろかった"
+        reviewClass1.icon = "none"
+        reviewClass1.sentence = "美術館がきれいで面白かった"
+        reviewClass1.evaluation = 4.0
+        var reviewClass2 = ReviewClass()
+        reviewClass2.body = "微妙"
+        reviewClass2.icon = "none"
+        reviewClass2.sentence = "汚かった"
+        reviewClass2.evaluation = 3.0
+        res.user_reviews += reviewClass1
+        res.user_reviews += reviewClass2
+
+        res.address = "東京都千代田区千代田1-1"
+
+        return res
+    }
+
 }
