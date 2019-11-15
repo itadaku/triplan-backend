@@ -1,6 +1,7 @@
 package com.example.backend.controller
 
 import com.example.backend.domain.models.User
+import com.example.backend.domain.models.response.TestResponse
 import com.example.backend.domain.service.impl.UserServiceImpl
 import com.example.backend.dto.response.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -36,6 +37,14 @@ class UserController {
     @GetMapping("/")
     fun testGet(): String {
         return "Hello World"
+    }
+
+    @GetMapping("/api/v1/test")
+    fun testApi(): TestResponse {
+        var testResponse = TestResponse()
+        testResponse.message = "hello"
+        testResponse.triplan_message = "hello triplan"
+        return testResponse
     }
 
     @PostMapping("api/v1/user/register")

@@ -1,9 +1,9 @@
-package com.example.backend.domain.models
+package com.example.backend.domain.models.response
 
 import java.util.*
 
 
-data class PlanInfoElement (
+data class PlanInfoResponse (
         var id: Int? = null,
         var title: String? = null,
         var body: String? = null,
