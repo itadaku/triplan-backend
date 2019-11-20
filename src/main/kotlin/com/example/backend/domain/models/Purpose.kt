@@ -14,6 +14,6 @@ data class Purpose (
     val name: String? = null,
     @Column(name = "created_at")
     val createdAt: Date? = null,
-    @Column(name = "update_at")
-    val updateAt: Date? = null
+    @Column(name = "updated_at")
+    val updatedAt: Date? = null
 )
