@@ -14,6 +14,7 @@ java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
 	mavenCentral()
+	jcenter()
 }
 
 dependencies {
@@ -29,6 +30,10 @@ dependencies {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 	}
 //	testImplementation("org.springframework.security:spring-security-test")
+	implementation("com.github.kittinunf.fuel:fuel:2.2.0")
+	implementation("com.github.kittinunf.fuel:fuel-json:2.2.0")
+	compile("org.json:json:20180813")
+//	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2")
 }
 
 tasks.withType<Test> {

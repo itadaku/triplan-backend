@@ -8,15 +8,15 @@ import javax.persistence.*
 data class Prefecture (
     @Id
     @Column(name = "id")
-    var id: Integer? = null,
+    var id: Int? = null,
     @Column(name = "name")
     var name: String? = null,
     @Column(name = "agriculture")
-    var agriculture: Integer? = null,
+    var agriculture: Int? = null,
     @Column(name = "forestry")
-    var forestry: Integer? = null,
+    var forestry: Int? = null,
     @Column(name = "fishing_industry")
-    var fishingIndustry: Integer? = null,
+    var fishingIndustry: Int? = null,
     @Column(name = "population")
     var population: String? = null,
     @Column(name = "created_at")
