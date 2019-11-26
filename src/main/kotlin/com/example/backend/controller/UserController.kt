@@ -65,7 +65,7 @@ class UserController {
         // トークンを作成
         user.token = createToken()
         val saveUser = userServiceImpl.save(user)
-        saveUser.id = null
+//        saveUser.id = null
         saveUser.password = null
         saveUser.createdAt = null
         saveUser.updatedAt = null
@@ -82,7 +82,7 @@ class UserController {
         }
 
         val responseUser = findUser[0]
-        responseUser.id = null
+//        responseUser.id = null
         responseUser.password = null
         responseUser.createdAt = null
         responseUser.updatedAt = null
@@ -99,7 +99,7 @@ class UserController {
         }
 
         val responseUser = findUser[0]
-        responseUser.id = null
+//        responseUser.id = null
         responseUser.password = null
         responseUser.createdAt = null
         responseUser.updatedAt = null
@@ -148,7 +148,7 @@ class UserController {
         userServiceImpl.updateUser(findUser[0])
 
         val responseUser = findUser[0]
-        responseUser.id = null
+//        responseUser.id = null
         responseUser.password = null
         responseUser.createdAt = null
         responseUser.updatedAt = null
