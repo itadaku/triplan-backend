@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface LineStationRepository : JpaRepository<LineStation, Int> {
+    fun findByLineId(lineId: Int?): List<LineStation>
 }

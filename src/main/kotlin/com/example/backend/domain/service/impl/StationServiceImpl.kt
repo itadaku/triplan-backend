@@ -5,6 +5,7 @@ import com.example.backend.domain.repository.StationRepository
 import com.example.backend.domain.service.StationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.Date
 
 @Service
 class StationServiceImpl : StationService {
@@ -20,7 +21,9 @@ class StationServiceImpl : StationService {
         return stationRepository.findByName(name)
     }
 
-
+    fun findById(id: Int?) : List<Station> {
+        return stationRepository.findById(id)
+    }
 
     fun deleteUser(id: Int) {
         stationRepository.deleteById(id)
