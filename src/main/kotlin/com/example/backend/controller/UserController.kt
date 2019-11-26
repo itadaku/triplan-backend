@@ -143,7 +143,7 @@ class UserController {
         }
         if(user.age != null) findUser[0].age = user.age
         if(user.gender != null) findUser[0].gender = user.gender
-        if(user.lineStationId != null) findUser[0].lineStationId = user.lineStationId
+        if(user.line_station_id != null) findUser[0].line_station_id = user.line_station_id
 
         userServiceImpl.updateUser(findUser[0])
 
