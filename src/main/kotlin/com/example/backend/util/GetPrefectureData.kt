@@ -1,16 +1,21 @@
 package com.example.backend.util
 
 import com.example.backend.domain.models.Prefecture
+import com.example.backend.domain.service.impl.PrefectureServiceImpl
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
 import com.github.kittinunf.fuel.json.responseJson
 import org.json.JSONArray
 import org.json.JSONObject
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import javax.annotation.PostConstruct
 
 @Component
 class GetPrefectureData {
+    @Autowired
+    lateinit var prefServiceImpl : PrefectureServiceImpl
+
     @PostConstruct
     fun getData() {
         println("Start get prefectures.")
@@ -18,11 +23,13 @@ class GetPrefectureData {
         val getAgricultureUrl = "https://opendata.resas-portal.go.jp/api/v1/agriculture/sales/forLine"  // 農業産出額
         val getForestryUrl = "https://opendata.resas-portal.go.jp/api/v1/forestry/income/forStacked"    // 林業総収入
         val getFishingIndustryUrl = "https://opendata.resas-portal.go.jp/api/v1/fishery/sea/totalSales"    // 海面漁獲物等販売金額
+        val getPopulationUrl = "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear"  // 人口
 
         val header: HashMap<String, String> = hashMapOf("X-API-KEY" to "QBy66lc6tWvIg0Wj1QDxX7nD7HYKPEzbtb5256eS")
 
         // 都道府県データのリスト
         var prefList : Array<Prefecture?> = arrayOfNulls(47)
+        var populationList : Array<Int?> = arrayOfNulls(47)
 
         // 都道府県一覧を取得
         val (_,_,resultGetPrefectures) = getPrefecturesUrl.httpGet().header(header).responseJson()
@@ -94,9 +101,44 @@ class GetPrefectureData {
                     }
                 }
             }
+            // 人口を取得
+            val populationParamList : HashMap<String, String> = hashMapOf("prefCode" to (i+1).toString(), "cityCode" to "-")
+            val (_, _, getPopulationResult) = getPopulationUrl.httpGet(populationParamList.toList()).header(header).responseJson()
+            when(getPopulationResult) {
+                is Result.Success -> {
+                    val json = getPopulationResult.get().obj()
+                    val populationResult = json.get("result") as JSONObject
+                    val populationResultData = populationResult.get("data") as JSONArray
+                    for (nowData in populationResultData) {
+                        nowData as JSONObject
+                        if(nowData.get("label") == "総人口"){
+                            val nowDataData = nowData.get("data") as JSONArray
+                            for(nowPopulationDataYear in nowDataData) {
+                                nowPopulationDataYear as JSONObject
+                                if(nowPopulationDataYear.get("year") == 2020){
+                                    populationList[i] = nowPopulationDataYear.get("value") as Int?
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             // 1秒スリープ
             Thread.sleep(1100L)
             println("GetPrefEnd[$i/46]")
+        }
+
+        // 人口を多い・普通・少ないの3種類に分けてデータを登録
+        var beforeSortPopulationList : List<Int?> = populationList.toList()
+        populationList.sort()
+        for(i in 0..46) {
+            if(beforeSortPopulationList[i]!! < populationList[15]!!){
+                prefList[i]?.population = "少ない"
+            }else if(beforeSortPopulationList[i]!! < populationList[30]!!){
+                prefList[i]?.population = "普通"
+            }else{
+                prefList[i]?.population = "多い"
+            }
         }
 
         for(i in 0..46){
@@ -104,6 +146,14 @@ class GetPrefectureData {
             println(prefList[i]?.agriculture)
             println(prefList[i]?.forestry)
             println(prefList[i]?.fishingIndustry)
+            println(prefList[i]?.population)
+//            var saveData = Prefecture()
+//            saveData.id = i
+//            saveData.name = prefList[i]?.name
+//            saveData.agriculture = prefList[i]?.agriculture
+//            saveData.forestry = prefList[i]?.forestry
+//            saveData.fishingIndustry = prefList[i]?.fishingIndustry
+//            prefServiceImpl.save(saveData)
         }
     }
 }
