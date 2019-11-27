@@ -15,7 +15,8 @@ data class Feedback (
     @Column(name = "text")
     var text: String? = null,
     @Column(name = "created_at")
-    var createdAt: Date? = null,
+    val createdAt: Date? = null,
     @Column(name = "updated_at")
-    var updateAt: Date? = null
+    val updateAt: Date? = null
+
 )
