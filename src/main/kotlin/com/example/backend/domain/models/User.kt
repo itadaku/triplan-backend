@@ -19,7 +19,7 @@ data class User (
     @Column(name = "password")
     var password: String? = null,
     @Column(name = "line_station_id")
-    var lineStationId: Int? = null,
+    var line_station_id: Int? = null,
     @Column(name = "age")
     var age: Int? = null,
     @Column(name = "gender")
