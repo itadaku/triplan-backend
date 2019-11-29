@@ -9,7 +9,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.util.*
 import javax.annotation.PostConstruct
+import kotlin.collections.HashMap
 
 @Component
 class GetPrefectureData {
@@ -28,8 +30,8 @@ class GetPrefectureData {
         val header: HashMap<String, String> = hashMapOf("X-API-KEY" to "QBy66lc6tWvIg0Wj1QDxX7nD7HYKPEzbtb5256eS")
 
         // 都道府県データのリスト
-        var prefList : Array<Prefecture?> = arrayOfNulls(47)
-        var populationList : Array<Int?> = arrayOfNulls(47)
+        val prefList : Array<Prefecture?> = arrayOfNulls(47)
+        val populationList : Array<Int?> = arrayOfNulls(47)
 
         // 都道府県一覧を取得
         val (_,_,resultGetPrefectures) = getPrefecturesUrl.httpGet().header(header).responseJson()
@@ -129,7 +131,7 @@ class GetPrefectureData {
         }
 
         // 人口を多い・普通・少ないの3種類に分けてデータを登録
-        var beforeSortPopulationList : List<Int?> = populationList.toList()
+        val beforeSortPopulationList : List<Int?> = populationList.toList()
         populationList.sort()
         for(i in 0..46) {
             if(beforeSortPopulationList[i]!! < populationList[15]!!){
@@ -142,18 +144,16 @@ class GetPrefectureData {
         }
 
         for(i in 0..46){
-            println(prefList[i]?.name)
-            println(prefList[i]?.agriculture)
-            println(prefList[i]?.forestry)
-            println(prefList[i]?.fishingIndustry)
-            println(prefList[i]?.population)
-//            var saveData = Prefecture()
-//            saveData.id = i
-//            saveData.name = prefList[i]?.name
-//            saveData.agriculture = prefList[i]?.agriculture
-//            saveData.forestry = prefList[i]?.forestry
-//            saveData.fishingIndustry = prefList[i]?.fishingIndustry
-//            prefServiceImpl.save(saveData)
+            val saveData = Prefecture()
+            saveData.id = i
+            saveData.name = prefList[i]?.name
+            saveData.agriculture = prefList[i]?.agriculture
+            saveData.forestry = prefList[i]?.forestry
+            saveData.fishingIndustry = prefList[i]?.fishingIndustry
+            saveData.population = prefList[i]?.population
+            saveData.createdAt = Date()
+            saveData.updatedAt = Date()
+            prefServiceImpl.save(saveData)
         }
     }
 }
