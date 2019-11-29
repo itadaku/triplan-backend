@@ -7,6 +7,6 @@ import java.util.Date
 
 @Repository
 interface StationRepository : JpaRepository<Station, Int> {
-    fun findByName(name: String?): List<Station>
     fun findById(id: Int?): List<Station>
+    fun findByName(name: String?): List<Station>
 }

@@ -17,12 +17,12 @@ class StationServiceImpl : StationService {
         return station
     }
 
-    fun findByName(name: String?) : List<Station> {
-        return stationRepository.findByName(name)
-    }
-
     fun findById(id: Int?) : List<Station> {
         return stationRepository.findById(id)
+    }
+
+    fun findByName(name: String?) : List<Station> {
+        return stationRepository.findByName(name)
     }
 
     fun deleteUser(id: Int) {
