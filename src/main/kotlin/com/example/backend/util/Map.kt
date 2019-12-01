@@ -10,22 +10,22 @@ import org.springframework.stereotype.Component
 class Map {
     fun getRequiredTime(origin :String?, destination :String?): String {
         var reqUrl = "https://maps.googleapis.com/maps/api/directions/json"
-        var apiKey = "AIzaSyDaWBYhWzeIYQyoi7qQqOUNPSsu85EyVmw"
-       ("$reqUrl?origin=$origin&destination=$destination&key=$apiKey").httpGet().response { _, response, result ->
+        var apiKey = "API KEY"
+       /*
+        ("$reqUrl?origin=$origin&destination=$destination&key=$apiKey").httpGet().response { _, response, result ->
             when (result) {
                 is Result.Success -> {
                     var resJSON = String(response.data)
-                    /*ここにJSONパース処理
-
-                    */
-                    println(resJSON)
+                    // ここにJSONパース処理
                 }
                 is Result.Failure -> {
                     println("通信に失敗しました。")
                 }
             }
         }
+        */
 
-        return "本来ならここに所要時間"
+        //本来ならここにJSONから取得した所要時間
+        return "2時間30分"
     }
 }
