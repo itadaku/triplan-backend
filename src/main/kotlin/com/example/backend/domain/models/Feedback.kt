@@ -18,4 +18,5 @@ data class Feedback (
     var createdAt: Date? = null,
     @Column(name = "updated_at")
     var updateAt: Date? = null
+
 )
