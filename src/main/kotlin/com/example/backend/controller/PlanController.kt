@@ -14,8 +14,11 @@ class PlanController {
     fun getTopPlan(): List<TopPlanResponse> {
         val res = mutableListOf<TopPlanResponse>()
 
+        // おすすめ
+        val topPlanRes1 = TopPlanResponse()
+        topPlanRes1.top_title = "おすすめ"
         // 1つ目
-        val sampleTopPlan1 = TopPlanResponse()
+        val sampleTopPlan1 = TopPlanItem()
         sampleTopPlan1.id = 1
         sampleTopPlan1.title = "Sample Plan 1"
         sampleTopPlan1.image = "none"
@@ -26,10 +29,10 @@ class PlanController {
         sampleTopPlan1.number_of_people = 2
         sampleTopPlan1.purpose += "海"
         sampleTopPlan1.purpose += "国内"
-        res += sampleTopPlan1
+        topPlanRes1.plans += sampleTopPlan1
 
         // 2つ目
-        val sampleTopPlan2 = TopPlanResponse()
+        val sampleTopPlan2 = TopPlanItem()
         sampleTopPlan2.id = 2
         sampleTopPlan2.title = "Sample Plan 2"
         sampleTopPlan2.image = "none"
@@ -41,10 +44,13 @@ class PlanController {
         sampleTopPlan2.purpose += "山"
         sampleTopPlan2.purpose += "キャンプ"
         sampleTopPlan2.purpose += "海外"
-        res += sampleTopPlan2
+        topPlanRes1.plans += sampleTopPlan2
 
+        // 他のユーザー
+        val topPlanRes2 = TopPlanResponse()
+        topPlanRes2.top_title = "他のユーザー"
         // 3つ目
-        val sampleTopPlan3 = TopPlanResponse()
+        val sampleTopPlan3 = TopPlanItem()
         sampleTopPlan3.id = 3
         sampleTopPlan3.title = "Sample Plan 3"
         sampleTopPlan3.image = "none"
@@ -56,7 +62,11 @@ class PlanController {
         sampleTopPlan3.purpose += "スキー"
         sampleTopPlan3.purpose += "冬"
         sampleTopPlan3.purpose += "国内"
-        res += sampleTopPlan3
+        topPlanRes2.plans += sampleTopPlan3
+
+        //
+        res += topPlanRes1
+        res += topPlanRes2
 
         return res
     }
