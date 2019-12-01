@@ -32,7 +32,8 @@ dependencies {
 //	testImplementation("org.springframework.security:spring-security-test")
 	implementation("com.github.kittinunf.fuel:fuel:2.2.0")
 	implementation("com.github.kittinunf.fuel:fuel-json:2.2.0")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0")
+	compile("org.json:json:20180813")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2")
 }
 
