@@ -15,6 +15,10 @@ class LineServiceImpl : LineService {
         return lineRepository.findByName(name)
     }
 
+    fun findAll() : List<Line>{
+        return lineRepository.findAll()
+    }
+
     fun save(line: Line) : Line {
         lineRepository.save(line)
         return line
