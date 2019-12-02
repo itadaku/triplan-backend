@@ -24,6 +24,10 @@ class LineServiceImpl : LineService {
         return line
     }
 
+    fun deleteAll() {
+        lineRepository.deleteAll()
+    }
+
     fun deleteUser(id: Int) {
         lineRepository.deleteById(id)
     }

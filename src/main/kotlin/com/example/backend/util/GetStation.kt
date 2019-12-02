@@ -62,6 +62,11 @@ class GetStation {
 
     @PostConstruct
     fun getData() {
+        // 最初にデータベースの中身を削除
+        stationServiceImpl.deleteAll()
+        lineServiceImpl.deleteAll()
+        lineStationServiceImpl.deleteAll()
+
         var reqBaseUrl = "http://www.ekidata.jp/api/l/"
         val reqJson: List<String> = listOf(
                 "11101.json","11102.json","11103.json","11104.json","11105.json",
@@ -183,7 +188,7 @@ class GetStation {
                 "99917.json","99918.json","99919.json","99920.json","99921.json",
                 "99922.json","99923.json","99925.json","99926.json","99927.json","99928.json"
         )
-        for (reqJsonFile in reqJson) {
+        for ((index, reqJsonFile) in reqJson.withIndex()) {
             (reqBaseUrl + reqJsonFile).httpGet().response { _, response, result ->
                 when (result) {
                     is Result.Success -> {
@@ -202,6 +207,9 @@ class GetStation {
                     }
                 }
             }
+            // 0.5s sleep
+            Thread.sleep(200L)
+            println("GetStationEnd[$index/" + reqJson.count() + "]")
         }
         println("station saved")
     }

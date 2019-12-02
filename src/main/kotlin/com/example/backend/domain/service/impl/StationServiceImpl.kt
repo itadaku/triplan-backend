@@ -25,6 +25,10 @@ class StationServiceImpl : StationService {
         return stationRepository.findByName(name)
     }
 
+    fun deleteAll() {
+        stationRepository.deleteAll()
+    }
+
     fun deleteUser(id: Int) {
         stationRepository.deleteById(id)
     }

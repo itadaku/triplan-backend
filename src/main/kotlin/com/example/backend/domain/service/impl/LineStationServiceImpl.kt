@@ -20,6 +20,10 @@ class LineStationServiceImpl : LineStationService {
         return lineStation
     }
 
+    fun deleteAll() {
+        lineStationRepository.deleteAll()
+    }
+
     fun deleteUser(id: Int) {
         lineStationRepository.deleteById(id)
     }
