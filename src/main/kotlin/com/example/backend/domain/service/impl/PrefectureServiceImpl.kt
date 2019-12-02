@@ -23,4 +23,8 @@ class PrefectureServiceImpl : PrefectureService{
     fun findById(id: Int) : Prefecture {
         return prefectureRepository.findById(id).get()
     }
+
+    fun findAll() : List<Prefecture> {
+        return prefectureRepository.findAll()
+    }
 }
