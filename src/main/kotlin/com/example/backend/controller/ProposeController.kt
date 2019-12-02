@@ -1,12 +1,9 @@
 package com.example.backend.controller
 
-import com.example.backend.domain.models.Plan
-import com.example.backend.domain.models.Prefecture
 import com.example.backend.domain.models.request.ProposeAreaBody
 import com.example.backend.domain.models.request.ProposePlanBody
 import com.example.backend.domain.models.response.PlanTag
 import com.example.backend.domain.models.response.ProposeAreaResponse
-import com.example.backend.domain.models.util.PrefectureForSort
 import com.example.backend.domain.service.impl.PrefectureServiceImpl
 import com.example.backend.domain.service.impl.UserServiceImpl
 import com.example.backend.dto.response.CommonException
@@ -83,9 +80,9 @@ class ProposeController {
         return res
     }
 
+    // 都道府県リストを取得してpref_codeを取得
     fun searchPrefectureCode(prefName: String): String {
-        // 都道府県リストを取得してpref_codeを取得
-        var pref_code = ""
+        var prefCode = ""
         val areaSearchUrl = "http://jws.jalan.net/APICommon/AreaSearch/V1/"
         val areaSearchParamList: HashMap<String, String> = hashMapOf("key" to "vir16ec73edea4")
         val (_,response,resultAreaSearch) = areaSearchUrl.httpGet(areaSearchParamList.toList()).response()
@@ -102,7 +99,7 @@ class ProposeController {
                         // 北海道と沖縄だけ例外処理
                         val jsonPrefecture = nowRegion.get("Prefecture") as JSONObject
                         if(jsonPrefecture.get("name").toString() == prefName){
-                            pref_code = jsonPrefecture.get("cd").toString()
+                            prefCode = jsonPrefecture.get("cd").toString()
                         }
                     }else{
                         // その他都道府県
@@ -110,7 +107,7 @@ class ProposeController {
                         for(nowPrefecture in jsonPrefecture) {
                             nowPrefecture as JSONObject
                             if(nowPrefecture.get("name").toString() == prefName){
-                                pref_code = nowPrefecture.get("cd").toString()
+                                prefCode = nowPrefecture.get("cd").toString()
                             }
                         }
                     }
@@ -118,7 +115,20 @@ class ProposeController {
             }
         }
 
-        return pref_code
+        return prefCode
+    }
+
+    // 温泉の施設を1つ取得
+    fun searchOnsen(prefCode: String) {
+        val onsenSearchUrl = "http://jws.jalan.net/APICommon/OnsenSearch/V1/"
+        val onsenSearchParamList: HashMap<String, String> = hashMapOf("key" to "vir16ec73edea4", "pref" to prefCode)
+        val (_,response,resultOnsenSearch) = onsenSearchUrl.httpGet(onsenSearchParamList.toList()).response()
+        when(resultOnsenSearch) {
+            is Result.Success -> {
+                val json = XML.toJSONObject(String(response.data))
+                println(json.toString())
+            }
+        }
     }
 
     @GetMapping("api/v1/propose/2")
@@ -129,13 +139,17 @@ class ProposeController {
             throw CommonException("Invalid Token", HttpStatus.BAD_REQUEST)
         }
 
-        // 都道府県の名前を取得
+        // 都道府県の名前を取得して、じゃらんの都道府県コード取得
         val searchPref = prefectureServiceImpl.findById(body.prefecture_id!!)
-
-        // pref_codeを利用して温泉を検索
         val prefCode = searchPrefectureCode(searchPref.name!!)
 
-        println(prefCode)
+        // タグから施設を取得(今は温泉のみ)
+        for(nowTag in body.plan_tags){
+            if(nowTag == 1){
+                // pref_codeを利用して温泉を検索
+                searchOnsen(prefCode)
+            }
+        }
 
         return "Success"
     }
