@@ -3,6 +3,7 @@ package com.example.backend.controller
 import com.example.backend.domain.models.Plan
 import com.example.backend.domain.models.Prefecture
 import com.example.backend.domain.models.request.ProposeAreaBody
+import com.example.backend.domain.models.request.ProposePlanBody
 import com.example.backend.domain.models.response.PlanTag
 import com.example.backend.domain.models.response.ProposeAreaResponse
 import com.example.backend.domain.models.util.PrefectureForSort
@@ -75,6 +76,17 @@ class ProposeController {
         }
 
         return res
+    }
+
+    @GetMapping("api/v1/propose/2")
+    fun proposePlan(@RequestParam token: String, @RequestBody body: ProposePlanBody) {
+        // TOKENの確認
+        val findUser = userServiceImpl.findByToken(token)
+        if(findUser.isEmpty()){
+            throw CommonException("Invalid Token", HttpStatus.BAD_REQUEST)
+        }
+
+
     }
 
     @GetMapping("api/v1/propose/tags")
