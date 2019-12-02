@@ -16,6 +16,10 @@ class PrefectureServiceImpl : PrefectureService{
         return prefecture
     }
 
+    fun deleteAll() {
+        prefectureRepository.deleteAll()
+    }
+
     fun findById(id: Int) : Prefecture {
         return prefectureRepository.findById(id).get()
     }

@@ -21,6 +21,7 @@ class GetPrefectureData {
     @PostConstruct
     fun getData() {
         println("Start get prefectures.")
+        prefServiceImpl.deleteAll()
         val getPrefecturesUrl = "https://opendata.resas-portal.go.jp/api/v1/prefectures"    // 都道府県一覧
         val getAgricultureUrl = "https://opendata.resas-portal.go.jp/api/v1/agriculture/sales/forLine"  // 農業産出額
         val getForestryUrl = "https://opendata.resas-portal.go.jp/api/v1/forestry/income/forStacked"    // 林業総収入
