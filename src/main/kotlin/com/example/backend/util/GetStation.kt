@@ -60,7 +60,7 @@ class GetStation {
         lineStationServiceImpl.save(lineStation)
     }
 
-    @PostConstruct
+//    @PostConstruct
     fun getData() {
         // 最初にデータベースの中身を削除
         stationServiceImpl.deleteAll()

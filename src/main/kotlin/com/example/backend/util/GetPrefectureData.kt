@@ -18,7 +18,7 @@ class GetPrefectureData {
     @Autowired
     lateinit var prefServiceImpl : PrefectureServiceImpl
 
-    @PostConstruct
+//    @PostConstruct
     fun getData() {
         println("Start get prefectures.")
         prefServiceImpl.deleteAll()
