@@ -1,7 +1,9 @@
 package com.example.backend.controller
 
+import com.example.backend.domain.models.Plan
 import com.example.backend.domain.models.Prefecture
 import com.example.backend.domain.models.request.ProposeAreaBody
+import com.example.backend.domain.models.response.PlanTag
 import com.example.backend.domain.models.response.ProposeAreaResponse
 import com.example.backend.domain.models.util.PrefectureForSort
 import com.example.backend.domain.service.impl.PrefectureServiceImpl
@@ -71,6 +73,19 @@ class ProposeController {
 
             res += addItem
         }
+
+        return res
+    }
+
+    @GetMapping("api/v1/propose/tags")
+    fun getTags() : List<PlanTag> {
+        var res: List<PlanTag> = mutableListOf()
+
+        var onsenTag = PlanTag()
+        onsenTag.id = 1
+        onsenTag.name = "温泉"
+
+        res += onsenTag
 
         return res
     }
