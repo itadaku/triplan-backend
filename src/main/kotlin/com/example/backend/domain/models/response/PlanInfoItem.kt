@@ -9,5 +9,6 @@ data class PlanInfoItem (
     var start_time: Date? = null,
     var end_time: Date? = null,
     var image_path: String? = null,
-    var type: Int? = null
+    var type: Int? = null,
+    var days: Int? = null
 )
