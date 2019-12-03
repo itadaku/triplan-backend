@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.HashMap
@@ -46,12 +47,28 @@ class ProposeController {
     lateinit var planElementServiceImpl : PlanElementServiceImpl
 
     @GetMapping("api/v1/propose/first")
-    fun proposeArea(@RequestParam token: String, @RequestBody body: ProposeAreaBody) : List<ProposeAreaResponse> {
+    fun proposeArea(@RequestParam token: String,
+                    @RequestParam agriculture: Boolean,
+                    @RequestParam forestry: Boolean,
+                    @RequestParam fishing_industry: Boolean,
+                    @RequestParam budget: Int,
+                    @RequestParam from_date: String,
+                    @RequestParam to_date: String) : List<ProposeAreaResponse> {
         // TOKENの確認
         val findUser = userServiceImpl.findByToken(token)
         if(findUser.isEmpty()){
             throw CommonException("Invalid Token", HttpStatus.BAD_REQUEST)
         }
+
+        val format = "yyyy-MM-dd"
+        val sdf = SimpleDateFormat(format, Locale.JAPAN)
+        val body = ProposeAreaBody()
+        body.agriculture = agriculture
+        body.forestry = forestry
+        body.fishing_industry = fishing_industry
+        body.budget = budget
+        body.from_date = sdf.parse(from_date)
+        body.to_date = sdf.parse(to_date)
 
         // それぞれの産業の最大値を取得
         val allPref = prefectureServiceImpl.findAll()
@@ -160,13 +177,25 @@ class ProposeController {
     }
 
     @GetMapping("api/v1/propose/second")
-    fun proposePlan(@RequestParam token: String, @RequestBody body: ProposePlanBody) : ProposePlanResponse {
+    fun proposePlan(@RequestParam token: String,
+                    @RequestParam prefecture_id: Int,
+                    @RequestParam from_date: String,
+                    @RequestParam to_date: String,
+                    @RequestParam plan_tags: List<Int>) : ProposePlanResponse {
         var res = ProposePlanResponse()
         // TOKENの確認
         val findUser = userServiceImpl.findByToken(token)
         if(findUser.isEmpty()){
             throw CommonException("Invalid Token", HttpStatus.BAD_REQUEST)
         }
+
+        val body = ProposePlanBody()
+        body.prefecture_id = prefecture_id
+        val format = "yyyy-MM-dd"
+        val sdf = SimpleDateFormat(format, Locale.JAPAN)
+        body.from_date = sdf.parse(from_date)
+        body.to_date = sdf.parse(to_date)
+        body.plan_tags = plan_tags
 
         // 都道府県の名前を取得して、じゃらんの都道府県コード取得
         val searchPref = prefectureServiceImpl.findById(body.prefecture_id!!)
