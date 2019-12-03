@@ -3,9 +3,7 @@ package com.example.backend.controller
 import com.example.backend.domain.models.response.*
 import com.example.backend.domain.models.typeEnum.ImageType
 import com.example.backend.domain.models.typeEnum.PlanType
-import com.example.backend.domain.service.impl.ElementServiceImpl
-import com.example.backend.domain.service.impl.PlanElementServiceImpl
-import com.example.backend.domain.service.impl.PlanServiceImpl
+import com.example.backend.domain.service.impl.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -22,6 +20,12 @@ class PlanController {
 
     @Autowired
     lateinit var planElementServiceImpl : PlanElementServiceImpl
+
+    @Autowired
+    lateinit var planLocationServiceImpl : PlanLocationServiceImpl
+
+    @Autowired
+    lateinit var prefectureServiceImpl : PrefectureServiceImpl
 
     @GetMapping("api/v1/plan/top")
     fun getTopPlan(): List<TopPlanResponse> {
@@ -89,7 +93,7 @@ class PlanController {
         val res = PlanInfoResponse()
 
         if(id == 100000 || id == 100001 || id == 100002){
-            val sampleTopPlan1 = TopPlanItem()
+            val sampleTopPlan1 = PlanItem()
             sampleTopPlan1.id = 100000
             sampleTopPlan1.title = "東北遊覧船ツアー"
             sampleTopPlan1.image = "ship.jpg"
@@ -100,6 +104,7 @@ class PlanController {
             sampleTopPlan1.number_of_people = 2
             sampleTopPlan1.purpose += "海"
             sampleTopPlan1.purpose += "国内"
+            sampleTopPlan1.address = "宮城県"
             res.plan = sampleTopPlan1
 
             val planInfo1 = PlanInfoItem()
@@ -193,7 +198,7 @@ class PlanController {
             val searchedPlan = planServiceImpl.findById(id).get()
 
             // プランの概要
-            val topPlan = TopPlanItem()
+            val topPlan = PlanItem()
             topPlan.id = searchedPlan.id
             topPlan.title = searchedPlan.title
             topPlan.days_nights = searchedPlan.daysNights
@@ -204,6 +209,10 @@ class PlanController {
             topPlan.review = 0.0
             topPlan.purpose += "温泉"
             res.plan = topPlan
+
+            var planLocationList = planLocationServiceImpl.findByPlanId(id)
+            var prefectureId = planLocationList[0].locationId
+            topPlan.address = prefectureServiceImpl.findById(prefectureId!!).name
 
             // プランの工程
             val planElementList = planElementServiceImpl.findByPlanId(id)

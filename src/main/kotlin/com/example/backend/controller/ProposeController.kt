@@ -3,6 +3,7 @@ package com.example.backend.controller
 import com.example.backend.domain.models.Element
 import com.example.backend.domain.models.Plan
 import com.example.backend.domain.models.PlanElement
+import com.example.backend.domain.models.PlanLocation
 import com.example.backend.domain.models.request.ProposeAreaBody
 import com.example.backend.domain.models.request.ProposePlanBody
 import com.example.backend.domain.models.response.PlanTag
@@ -45,6 +46,9 @@ class ProposeController {
 
     @Autowired
     lateinit var planElementServiceImpl : PlanElementServiceImpl
+
+    @Autowired
+    lateinit var planLocaltionServiceImpl : PlanLocationServiceImpl
 
     @GetMapping("api/v1/propose/first")
     fun proposeArea(@RequestParam token: String,
@@ -229,6 +233,14 @@ class ProposeController {
                     nowOnsenPlan.createdAt = Date()
                     nowOnsenPlan.updateAt = Date()
                     planServiceImpl.save(nowOnsenPlan)
+
+                    // PlanLocationを保存
+                    var nowPlanLocation = PlanLocation()
+                    nowPlanLocation.planId = nowOnsenPlan.id
+                    nowPlanLocation.locationId = prefecture_id
+                    nowPlanLocation.createdAt = Date()
+                    nowPlanLocation.updateAt = Date()
+                    planLocaltionServiceImpl.save(nowPlanLocation)
 
                     // Elementを作成して、plan_elementsに登録
                     // Elementを作成(行き->温泉->帰りのみ)

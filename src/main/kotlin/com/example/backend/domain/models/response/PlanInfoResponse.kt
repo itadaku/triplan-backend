@@ -4,6 +4,6 @@ import java.util.*
 
 
 data class PlanInfoResponse (
-        var plan : TopPlanItem? = null,
+        var plan : PlanItem? = null,
         var schedules : List<PlanInfoItem> = listOf()
 )
