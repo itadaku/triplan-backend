@@ -233,30 +233,38 @@ class PlanController {
 
     @GetMapping("/api/v1/plan/detail")
     fun getPlanInfoDetail(@RequestParam id: Int): PlanDetailResponse {
+        val nowElement = elementServiceImpl.findById(id)
+
         var res = PlanDetailResponse()
-        res.id = 1
+        res.id = id
         res.title = "観光"
         res.body = "美術館"
         res.review = 3.7
-        res.link = "http://sample.com"
+        res.link = "https://www.google.com/"
+
+        if(nowElement.isPresent) {
+            res.title = nowElement.get().name
+            res.body = nowElement.get().body
+            res.link = nowElement.get().linkUrl
+        }
 
         var imagePath1 = ImageClass()
-        imagePath1.image_path = "none"
+        imagePath1.image_path = "onsen.jpg"
         imagePath1.image_type = ImageType.MAIN.id
         var imagePath2 = ImageClass()
-        imagePath2.image_path = "none"
+        imagePath2.image_path = "hotel.jpg"
         imagePath2.image_type = ImageType.SUB.id
         res.image_paths += imagePath1
         res.image_paths += imagePath2
 
         var reviewClass1 = ReviewClass()
         reviewClass1.body = "おもろかった"
-        reviewClass1.icon = "none"
+        reviewClass1.icon = "user_icon.jpg"
         reviewClass1.sentence = "美術館がきれいで面白かった"
         reviewClass1.evaluation = 4.0
         var reviewClass2 = ReviewClass()
         reviewClass2.body = "微妙"
-        reviewClass2.icon = "none"
+        reviewClass2.icon = "user_icon.jpg"
         reviewClass2.sentence = "汚かった"
         reviewClass2.evaluation = 3.0
         res.user_reviews += reviewClass1
@@ -266,6 +274,5 @@ class PlanController {
 
         return res
     }
-
 
 }
