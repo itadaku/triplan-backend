@@ -266,7 +266,7 @@ class ProposeController {
                     nowOnsenPlanItem.max_budget = nowOnsenPlan.maxBudget
                     nowOnsenPlanItem.number_of_people = nowOnsenPlan.numberOfPeople
                     nowOnsenPlanItem.review = 0.0
-                    nowOnsenPlanItem.image = "none"
+                    nowOnsenPlanItem.image = "onsen.jpg"
                     nowOnsenPlanItem.purpose += "温泉"
 
                     res.propose_plans += nowOnsenPlanItem
