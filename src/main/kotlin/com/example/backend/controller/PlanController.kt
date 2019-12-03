@@ -233,12 +233,20 @@ class PlanController {
 
     @GetMapping("/api/v1/plan/detail")
     fun getPlanInfoDetail(@RequestParam id: Int): PlanDetailResponse {
+        val nowElement = elementServiceImpl.findById(id)
+
         var res = PlanDetailResponse()
-        res.id = 1
+        res.id = id
         res.title = "観光"
         res.body = "美術館"
         res.review = 3.7
         res.link = "http://sample.com"
+
+        if(nowElement.isPresent) {
+            res.title = nowElement.get().name
+            res.body = nowElement.get().body
+            res.link = nowElement.get().linkUrl
+        }
 
         var imagePath1 = ImageClass()
         imagePath1.image_path = "none"
@@ -266,6 +274,5 @@ class PlanController {
 
         return res
     }
-
 
 }
