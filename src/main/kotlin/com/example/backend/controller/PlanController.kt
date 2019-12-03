@@ -8,10 +8,7 @@ import com.example.backend.domain.service.impl.*
 import com.example.backend.dto.response.CommonException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
@@ -338,5 +335,23 @@ class PlanController {
         res.plan_id = findPlanUserList[0].planId
 
         return getPlanInfo(res.plan_id!!)
+    }
+
+    @DeleteMapping("api/v1/plan/now")
+    fun deleteNowPlan(@RequestParam token: String) : String {
+        val findUser = userServiceImpl.findByToken(token)
+        if(findUser.isEmpty()){
+            throw CommonException("Invalid Token", HttpStatus.BAD_REQUEST)
+        }
+
+        // すでに紐付いてたら削除
+        val findPlanUserList = planUserServiceImpl.findByUserId(findUser[0].id!!)
+        if(findPlanUserList.isNotEmpty()){
+            for(nowPlanUser in findPlanUserList){
+                planUserServiceImpl.deleteById(nowPlanUser.id!!)
+            }
+        }
+
+        return "Success"
     }
 }
