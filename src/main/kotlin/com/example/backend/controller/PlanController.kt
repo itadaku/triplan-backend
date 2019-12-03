@@ -1,11 +1,15 @@
 package com.example.backend.controller
 
+import com.example.backend.domain.models.PlanUser
 import com.example.backend.domain.models.response.*
 import com.example.backend.domain.models.typeEnum.ImageType
 import com.example.backend.domain.models.typeEnum.PlanType
 import com.example.backend.domain.service.impl.*
+import com.example.backend.dto.response.CommonException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
@@ -26,6 +30,12 @@ class PlanController {
 
     @Autowired
     lateinit var prefectureServiceImpl : PrefectureServiceImpl
+
+    @Autowired
+    lateinit var userServiceImpl : UserServiceImpl
+
+    @Autowired
+    lateinit var planUserServiceImpl : PlanUserServiceImpl
 
     @GetMapping("api/v1/plan/top")
     fun getTopPlan(): List<TopPlanResponse> {
@@ -284,4 +294,49 @@ class PlanController {
         return res
     }
 
+    @PostMapping("api/v1/plan/now")
+    fun postNowPlan(@RequestParam token: String, @RequestParam plan_id: Int) : String{
+        val findUser = userServiceImpl.findByToken(token)
+        if(findUser.isEmpty()){
+            throw CommonException("Invalid Token", HttpStatus.BAD_REQUEST)
+        }
+
+        // すでに紐付いてたら削除
+        val findPlanUserList = planUserServiceImpl.findByUserId(findUser[0].id!!)
+        if(findPlanUserList.isNotEmpty()){
+            for(nowPlanUser in findPlanUserList){
+                planUserServiceImpl.deleteById(nowPlanUser.id!!)
+            }
+        }
+
+        // 新しく紐付ける
+        var planUser = PlanUser()
+        planUser.planId = plan_id
+        planUser.userId = findUser[0].id
+        planUser.isProgress = false
+        planUser.nowProgressPlanElementId = 0
+        planUser.createdAt = Date()
+        planUser.updateAt = Date()
+        planUserServiceImpl.save(planUser)
+
+        return "Success"
+    }
+
+    @GetMapping("api/v1/plan/now")
+    fun getNowPlan(@RequestParam token: String) : NowResponse {
+        var res = NowResponse()
+
+        val findUser = userServiceImpl.findByToken(token)
+        if(findUser.isEmpty()){
+            throw CommonException("Invalid Token", HttpStatus.BAD_REQUEST)
+        }
+
+        val findPlanUserList = planUserServiceImpl.findByUserId(findUser[0].id!!)
+        if(findPlanUserList.isEmpty()){
+            throw CommonException("No Now Plan", HttpStatus.BAD_REQUEST)
+        }
+        res.plan_id = findPlanUserList[0].planId
+
+        return res
+    }
 }
