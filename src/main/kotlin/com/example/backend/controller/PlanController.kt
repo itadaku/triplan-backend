@@ -97,6 +97,7 @@ class PlanController {
             planInfo1.end_time = Date(1557280800L*1000)
             planInfo1.image_path = "none"
             planInfo1.type = PlanType.MOVE.id
+            planInfo1.days = 1
             res.schedules += planInfo1
 
             val planInfo2 = PlanInfoItem()
@@ -107,6 +108,7 @@ class PlanController {
             planInfo2.end_time = Date(1557284400L*1000)
             planInfo2.image_path = "none"
             planInfo2.type = PlanType.SPOT.id
+            planInfo2.days = 1
             res.schedules += planInfo2
 
             val planInfo3 = PlanInfoItem()
@@ -117,6 +119,7 @@ class PlanController {
             planInfo3.end_time = Date(1557288000L*1000)
             planInfo3.image_path = "none"
             planInfo3.type = PlanType.SPOT.id
+            planInfo3.days = 1
             res.schedules += planInfo3
 
             val planInfo4 = PlanInfoItem()
@@ -127,6 +130,7 @@ class PlanController {
             planInfo4.end_time = Date(1557289800L*1000)
             planInfo4.image_path = "none"
             planInfo4.type = PlanType.MOVE.id
+            planInfo4.days = 1
             res.schedules += planInfo4
 
             val planInfo5 = PlanInfoItem()
@@ -137,6 +141,7 @@ class PlanController {
             planInfo5.end_time = Date(1557298800L*1000)
             planInfo5.image_path = "none"
             planInfo5.type = PlanType.SPOT.id
+            planInfo5.days = 1
             res.schedules += planInfo5
 
             val planInfo6 = PlanInfoItem()
@@ -147,6 +152,7 @@ class PlanController {
             planInfo6.end_time = Date(1557302400L*1000)
             planInfo6.image_path = "none"
             planInfo6.type = PlanType.MOVE.id
+            planInfo6.days = 1
             res.schedules += planInfo6
         }
 
