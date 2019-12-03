@@ -32,13 +32,13 @@ class PlanController {
         topPlanRes1.top_title = "おすすめ"
         // 1つ目
         val sampleTopPlan1 = TopPlanItem()
-        sampleTopPlan1.id = 1
-        sampleTopPlan1.title = "Sample Plan 1"
-        sampleTopPlan1.image = "onsen.jpg"
+        sampleTopPlan1.id = 100000
+        sampleTopPlan1.title = "東北遊覧船ツアー"
+        sampleTopPlan1.image = "ship.jpg"
         sampleTopPlan1.review = 3.5
-        sampleTopPlan1.days_nights = 3
-        sampleTopPlan1.min_budget = 25000
-        sampleTopPlan1.max_budget = 30000
+        sampleTopPlan1.days_nights = 2
+        sampleTopPlan1.min_budget = 70000
+        sampleTopPlan1.max_budget = 80000
         sampleTopPlan1.number_of_people = 2
         sampleTopPlan1.purpose += "海"
         sampleTopPlan1.purpose += "国内"
@@ -46,9 +46,9 @@ class PlanController {
 
         // 2つ目
         val sampleTopPlan2 = TopPlanItem()
-        sampleTopPlan2.id = 2
-        sampleTopPlan2.title = "Sample Plan 2"
-        sampleTopPlan2.image = "onsen.jpg"
+        sampleTopPlan2.id = 100001
+        sampleTopPlan2.title = "日の出キャンプ"
+        sampleTopPlan2.image = "camp.jpg"
         sampleTopPlan2.review = 4.1
         sampleTopPlan2.days_nights = 2
         sampleTopPlan2.min_budget = 200000
@@ -64,14 +64,14 @@ class PlanController {
         topPlanRes2.top_title = "他のユーザー"
         // 3つ目
         val sampleTopPlan3 = TopPlanItem()
-        sampleTopPlan3.id = 3
-        sampleTopPlan3.title = "Sample Plan 3"
-        sampleTopPlan3.image = "onsen.jpg"
+        sampleTopPlan3.id = 1000002
+        sampleTopPlan3.title = "国内スキー"
+        sampleTopPlan3.image = "ski.jpg"
         sampleTopPlan3.review = 2.0
         sampleTopPlan3.days_nights = 1
         sampleTopPlan3.min_budget = 40000
         sampleTopPlan3.max_budget = 50000
-        sampleTopPlan3.number_of_people = 3
+        sampleTopPlan3.number_of_people = 1
         sampleTopPlan3.purpose += "スキー"
         sampleTopPlan3.purpose += "冬"
         sampleTopPlan3.purpose += "国内"
@@ -88,15 +88,15 @@ class PlanController {
     fun getPlanInfo(@RequestParam id: Int) : PlanInfoResponse {
         val res = PlanInfoResponse()
 
-        if(id == 0){
+        if(id == 100000 || id == 100001 || id == 100002){
             val sampleTopPlan1 = TopPlanItem()
-            sampleTopPlan1.id = 1
-            sampleTopPlan1.title = "Sample Plan 1"
-            sampleTopPlan1.image = "none"
+            sampleTopPlan1.id = 100000
+            sampleTopPlan1.title = "東北遊覧船ツアー"
+            sampleTopPlan1.image = "ship.jpg"
             sampleTopPlan1.review = 3.5
-            sampleTopPlan1.days_nights = 3
-            sampleTopPlan1.min_budget = 25000
-            sampleTopPlan1.max_budget = 30000
+            sampleTopPlan1.days_nights = 2
+            sampleTopPlan1.min_budget = 70000
+            sampleTopPlan1.max_budget = 80000
             sampleTopPlan1.number_of_people = 2
             sampleTopPlan1.purpose += "海"
             sampleTopPlan1.purpose += "国内"
@@ -105,22 +105,22 @@ class PlanController {
             val planInfo1 = PlanInfoItem()
             planInfo1.id = 1
             planInfo1.title = "移動"
-            planInfo1.body = "車"
+            planInfo1.body = "電車"
             planInfo1.start_time = Date(1557277200L*1000)
-            planInfo1.end_time = Date(1557280800L*1000)
-            planInfo1.image_path = "none"
+            planInfo1.end_time = Date(1557288000L*1000)
+            planInfo1.image_path = "train.jpg"
             planInfo1.type = PlanType.MOVE.id
             planInfo1.days = 1
             res.schedules += planInfo1
 
             val planInfo2 = PlanInfoItem()
             planInfo2.id = 2
-            planInfo2.title = "海"
-            planInfo2.body = "海"
-            planInfo2.start_time = Date(1557280800L*1000)
-            planInfo2.end_time = Date(1557284400L*1000)
-            planInfo2.image_path = "none"
-            planInfo2.type = PlanType.SPOT.id
+            planInfo2.title = "移動"
+            planInfo2.body = "車"
+            planInfo2.start_time = Date(1557288000L*1000)
+            planInfo2.end_time = Date(1557291600L*1000)
+            planInfo2.image_path = "car.jpg"
+            planInfo2.type = PlanType.MOVE.id
             planInfo2.days = 1
             res.schedules += planInfo2
 
@@ -128,9 +128,9 @@ class PlanController {
             planInfo3.id = 3
             planInfo3.title = "昼食"
             planInfo3.body = "海の家で昼食"
-            planInfo3.start_time = Date(1557284400L*1000)
-            planInfo3.end_time = Date(1557288000L*1000)
-            planInfo3.image_path = "none"
+            planInfo3.start_time = Date(1557291600L*1000)
+            planInfo3.end_time = Date(1557295200L*1000)
+            planInfo3.image_path = "food.jpg"
             planInfo3.type = PlanType.SPOT.id
             planInfo3.days = 1
             res.schedules += planInfo3
@@ -139,20 +139,20 @@ class PlanController {
             planInfo4.id = 4
             planInfo4.title = "移動"
             planInfo4.body = "車"
-            planInfo4.start_time = Date(1557288000L*1000)
-            planInfo4.end_time = Date(1557289800L*1000)
-            planInfo4.image_path = "none"
+            planInfo4.start_time = Date(1557295200L*1000)
+            planInfo4.end_time = Date(1557309600L*1000)
+            planInfo4.image_path = "car.jpg"
             planInfo4.type = PlanType.MOVE.id
             planInfo4.days = 1
             res.schedules += planInfo4
 
             val planInfo5 = PlanInfoItem()
             planInfo5.id = 5
-            planInfo5.title = "観光"
-            planInfo5.body = "美術館"
-            planInfo5.start_time = Date(1557289800L*1000)
-            planInfo5.end_time = Date(1557298800L*1000)
-            planInfo5.image_path = "none"
+            planInfo5.title = "宿"
+            planInfo5.body = "宿泊"
+            planInfo5.start_time = Date(1557309600L*1000)
+            planInfo5.end_time = Date(1557367200L*1000)
+            planInfo5.image_path = "hotel.jpg"
             planInfo5.type = PlanType.SPOT.id
             planInfo5.days = 1
             res.schedules += planInfo5
@@ -160,13 +160,35 @@ class PlanController {
             val planInfo6 = PlanInfoItem()
             planInfo6.id = 6
             planInfo6.title = "移動"
-            planInfo6.body = "帰宅"
-            planInfo6.start_time = Date(1557298800L*1000)
-            planInfo6.end_time = Date(1557302400L*1000)
-            planInfo6.image_path = "none"
+            planInfo6.body = "車"
+            planInfo6.start_time = Date(1557367200L*1000)
+            planInfo6.end_time = Date(1557378000L*1000)
+            planInfo6.image_path = "car.jpg"
             planInfo6.type = PlanType.MOVE.id
-            planInfo6.days = 1
+            planInfo6.days = 2
             res.schedules += planInfo6
+
+            val planInfo7 = PlanInfoItem()
+            planInfo7.id = 7
+            planInfo7.title = "船"
+            planInfo7.body = "乗船"
+            planInfo7.start_time = Date(1557378000L*1000)
+            planInfo7.end_time = Date(1557396000L*1000)
+            planInfo7.image_path = "ship.jpg"
+            planInfo7.type = PlanType.SPOT.id
+            planInfo7.days = 2
+            res.schedules += planInfo7
+
+            val planInfo8 = PlanInfoItem()
+            planInfo8.id = 8
+            planInfo8.title = "移動"
+            planInfo8.body = "帰宅"
+            planInfo8.start_time = Date(1557396000L*1000)
+            planInfo8.end_time = Date(1557406800L*1000)
+            planInfo8.image_path = "train.jpg"
+            planInfo8.type = PlanType.MOVE.id
+            planInfo8.days = 2
+            res.schedules += planInfo8
         }else{
             val searchedPlan = planServiceImpl.findById(id).get()
 
