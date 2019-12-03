@@ -196,6 +196,7 @@ class PlanController {
                 nowPlanInfo.start_time = nowPlanElement.from_date
                 nowPlanInfo.end_time = nowPlanElement.to_date
                 nowPlanInfo.type = PlanType.SPOT.id
+                nowPlanInfo.days = 1
                 if(nowPlanInfo.title == "移動"){
                     nowPlanInfo.type = PlanType.MOVE.id
                 }
