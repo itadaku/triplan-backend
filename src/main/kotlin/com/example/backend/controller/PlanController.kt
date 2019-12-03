@@ -3,6 +3,10 @@ package com.example.backend.controller
 import com.example.backend.domain.models.response.*
 import com.example.backend.domain.models.typeEnum.ImageType
 import com.example.backend.domain.models.typeEnum.PlanType
+import com.example.backend.domain.service.impl.ElementServiceImpl
+import com.example.backend.domain.service.impl.PlanElementServiceImpl
+import com.example.backend.domain.service.impl.PlanServiceImpl
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -10,6 +14,15 @@ import java.util.*
 
 @RestController
 class PlanController {
+    @Autowired
+    lateinit var planServiceImpl : PlanServiceImpl
+
+    @Autowired
+    lateinit var elementServiceImpl : ElementServiceImpl
+
+    @Autowired
+    lateinit var planElementServiceImpl : PlanElementServiceImpl
+
     @GetMapping("api/v1/plan/top")
     fun getTopPlan(): List<TopPlanResponse> {
         val res = mutableListOf<TopPlanResponse>()
@@ -75,20 +88,20 @@ class PlanController {
     fun getPlanInfo(@RequestParam id: Int) : PlanInfoResponse {
         val res = PlanInfoResponse()
 
-        val sampleTopPlan1 = TopPlanItem()
-        sampleTopPlan1.id = 1
-        sampleTopPlan1.title = "Sample Plan 1"
-        sampleTopPlan1.image = "none"
-        sampleTopPlan1.review = 3.5
-        sampleTopPlan1.days_nights = 3
-        sampleTopPlan1.min_budget = 25000
-        sampleTopPlan1.max_budget = 30000
-        sampleTopPlan1.number_of_people = 2
-        sampleTopPlan1.purpose += "海"
-        sampleTopPlan1.purpose += "国内"
-        res.plan = sampleTopPlan1
+        if(id == 0){
+            val sampleTopPlan1 = TopPlanItem()
+            sampleTopPlan1.id = 1
+            sampleTopPlan1.title = "Sample Plan 1"
+            sampleTopPlan1.image = "none"
+            sampleTopPlan1.review = 3.5
+            sampleTopPlan1.days_nights = 3
+            sampleTopPlan1.min_budget = 25000
+            sampleTopPlan1.max_budget = 30000
+            sampleTopPlan1.number_of_people = 2
+            sampleTopPlan1.purpose += "海"
+            sampleTopPlan1.purpose += "国内"
+            res.plan = sampleTopPlan1
 
-        if(id in 1..3){
             val planInfo1 = PlanInfoItem()
             planInfo1.id = 1
             planInfo1.title = "移動"
@@ -148,6 +161,41 @@ class PlanController {
             planInfo6.image_path = "none"
             planInfo6.type = PlanType.MOVE.id
             res.schedules += planInfo6
+        }else{
+            val searchedPlan = planServiceImpl.findById(id).get()
+
+            // プランの概要
+            val topPlan = TopPlanItem()
+            topPlan.id = searchedPlan.id
+            topPlan.title = searchedPlan.title
+            topPlan.days_nights = searchedPlan.daysNights
+            topPlan.min_budget = searchedPlan.minBudget
+            topPlan.max_budget = searchedPlan.maxBudget
+            topPlan.number_of_people = searchedPlan.numberOfPeople
+            topPlan.image = "none"
+            topPlan.review = 0.0
+            topPlan.purpose += "温泉"
+            res.plan = topPlan
+
+            // プランの工程
+            val planElementList = planElementServiceImpl.findByPlanId(id)
+            for(nowPlanElement in planElementList) {
+                val nowElement = elementServiceImpl.findById(nowPlanElement.element_id!!).get()
+
+                val nowPlanInfo = PlanInfoItem()
+                nowPlanInfo.id = nowPlanElement.id
+                nowPlanInfo.title = nowElement.name
+                nowPlanInfo.body = nowElement.body
+                nowPlanInfo.image_path = "none"
+                nowPlanInfo.start_time = nowPlanElement.from_date
+                nowPlanInfo.end_time = nowPlanElement.to_date
+                nowPlanInfo.type = PlanType.SPOT.id
+                if(nowPlanInfo.title == "移動"){
+                    nowPlanInfo.type = PlanType.MOVE.id
+                }
+
+                res.schedules += nowPlanInfo
+            }
         }
 
         return res

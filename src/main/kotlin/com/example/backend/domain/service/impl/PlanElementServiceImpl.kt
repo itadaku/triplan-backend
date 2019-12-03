@@ -15,4 +15,15 @@ class PlanElementServiceImpl : PlanElementService{
         planElementRepository.save(planElement)
         return planElement
     }
+
+    fun findByPlanId(plan_id : Int) : List<PlanElement> {
+        val allList = planElementRepository.findAll()
+        val filteredList = mutableListOf<PlanElement>()
+        for(nowPlanElement in allList){
+            if(nowPlanElement.plan_id == plan_id){
+                filteredList += nowPlanElement
+            }
+        }
+        return filteredList
+    }
 }
