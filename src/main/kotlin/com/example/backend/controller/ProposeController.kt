@@ -45,7 +45,7 @@ class ProposeController {
     @Autowired
     lateinit var planElementServiceImpl : PlanElementServiceImpl
 
-    @GetMapping("api/v1/propose/1")
+    @GetMapping("api/v1/propose/first")
     fun proposeArea(@RequestParam token: String, @RequestBody body: ProposeAreaBody) : List<ProposeAreaResponse> {
         // TOKENの確認
         val findUser = userServiceImpl.findByToken(token)
@@ -159,7 +159,7 @@ class ProposeController {
         return res
     }
 
-    @GetMapping("api/v1/propose/2")
+    @GetMapping("api/v1/propose/second")
     fun proposePlan(@RequestParam token: String, @RequestBody body: ProposePlanBody) : ProposePlanResponse {
         var res = ProposePlanResponse()
         // TOKENの確認
