@@ -323,7 +323,7 @@ class PlanController {
     }
 
     @GetMapping("api/v1/plan/now")
-    fun getNowPlan(@RequestParam token: String) : NowResponse {
+    fun getNowPlan(@RequestParam token: String) : PlanInfoResponse {
         var res = NowResponse()
 
         val findUser = userServiceImpl.findByToken(token)
@@ -337,6 +337,6 @@ class PlanController {
         }
         res.plan_id = findPlanUserList[0].planId
 
-        return res
+        return getPlanInfo(res.plan_id!!)
     }
 }
