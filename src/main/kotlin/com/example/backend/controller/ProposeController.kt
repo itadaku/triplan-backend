@@ -1,9 +1,12 @@
 package com.example.backend.controller
 
+import com.example.backend.domain.models.Element
 import com.example.backend.domain.models.request.ProposeAreaBody
 import com.example.backend.domain.models.request.ProposePlanBody
 import com.example.backend.domain.models.response.PlanTag
 import com.example.backend.domain.models.response.ProposeAreaResponse
+import com.example.backend.domain.models.util.OnsenData
+import com.example.backend.domain.service.impl.ElementServiceImpl
 import com.example.backend.domain.service.impl.PrefectureServiceImpl
 import com.example.backend.domain.service.impl.UserServiceImpl
 import com.example.backend.dto.response.CommonException
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
+import kotlin.collections.HashMap
 import kotlin.math.max
 
 @RestController
@@ -27,6 +32,9 @@ class ProposeController {
 
     @Autowired
     lateinit var prefectureServiceImpl: PrefectureServiceImpl
+
+    @Autowired
+    lateinit var planElementServiceImpl : ElementServiceImpl
 
     @GetMapping("api/v1/propose/1")
     fun proposeArea(@RequestParam token: String, @RequestBody body: ProposeAreaBody) : List<ProposeAreaResponse> {
@@ -118,17 +126,28 @@ class ProposeController {
         return prefCode
     }
 
-    // 温泉の施設を1つ取得
-    fun searchOnsen(prefCode: String) {
+    // 温泉の施設を複数取得
+    fun searchOnsen(prefCode: String) : List<OnsenData> {
+        var res : List<OnsenData> = mutableListOf()
+        // 温泉データを取得
         val onsenSearchUrl = "http://jws.jalan.net/APICommon/OnsenSearch/V1/"
         val onsenSearchParamList: HashMap<String, String> = hashMapOf("key" to "vir16ec73edea4", "pref" to prefCode)
         val (_,response,resultOnsenSearch) = onsenSearchUrl.httpGet(onsenSearchParamList.toList()).response()
         when(resultOnsenSearch) {
             is Result.Success -> {
                 val json = XML.toJSONObject(String(response.data))
-                println(json.toString())
+                val resultsJson = json.get("Results") as JSONObject
+                val onsenJson = resultsJson.get("Onsen") as JSONArray
+                for(nowOnsenJson in onsenJson) {
+                    nowOnsenJson as JSONObject
+                    var nowOnsenData = OnsenData()
+                    nowOnsenData.name = nowOnsenJson.get("OnsenName").toString()
+                    nowOnsenData.address = nowOnsenJson.get("OnsenAddress").toString()
+                    res += nowOnsenData
+                }
             }
         }
+        return res
     }
 
     @GetMapping("api/v1/propose/2")
@@ -147,7 +166,20 @@ class ProposeController {
         for(nowTag in body.plan_tags){
             if(nowTag == 1){
                 // pref_codeを利用して温泉を検索
-                searchOnsen(prefCode)
+                val onsenList = searchOnsen(prefCode)
+                for(nowOnsen in onsenList){
+                    // プランの要素テーブルに存在しなかったら追加
+                    val searchResult = planElementServiceImpl.findByName(nowOnsen.name!!)
+                    if(searchResult.isEmpty()){
+                        var saveElement = Element()
+                        saveElement.name = nowOnsen.name
+                        saveElement.linkUrl = "none"
+                        saveElement.body = nowOnsen.address
+                        saveElement.createdAt = Date()
+                        saveElement.updateAt = Date()
+                        planElementServiceImpl.save(saveElement)
+                    }
+                }
             }
         }
 
