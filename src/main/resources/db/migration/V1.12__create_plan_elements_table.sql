@@ -3,8 +3,8 @@ CREATE TABLE IF NOT EXISTS plan_elements (
   plan_id integer not null,
   element_id integer not null,
   seq integer not null,
-  from_data timestamp not null,
-  to_data timestamp not null,
+  from_date timestamp not null,
+  to_date timestamp not null,
   created_at timestamp default current_timestamp not null,
   updated_at timestamp default current_timestamp not null
 );
