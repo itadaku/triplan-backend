@@ -5,6 +5,7 @@ import com.example.backend.domain.repository.ElementRepository
 import com.example.backend.domain.service.ElementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class ElementServiceImpl : ElementService{
@@ -18,5 +19,9 @@ class ElementServiceImpl : ElementService{
 
     fun findByName(name: String) : List<Element> {
         return elementRepository.findByName(name)
+    }
+
+    fun findById(id : Int) : Optional<Element> {
+        return elementRepository.findById(id)
     }
 }

@@ -2,6 +2,7 @@ package com.example.backend.controller
 
 import com.example.backend.domain.models.Element
 import com.example.backend.domain.models.Plan
+import com.example.backend.domain.models.PlanElement
 import com.example.backend.domain.models.request.ProposeAreaBody
 import com.example.backend.domain.models.request.ProposePlanBody
 import com.example.backend.domain.models.response.PlanTag
@@ -9,10 +10,7 @@ import com.example.backend.domain.models.response.ProposeAreaResponse
 import com.example.backend.domain.models.response.ProposePlanResponse
 import com.example.backend.domain.models.response.TopPlanItem
 import com.example.backend.domain.models.util.OnsenData
-import com.example.backend.domain.service.impl.ElementServiceImpl
-import com.example.backend.domain.service.impl.PlanServiceImpl
-import com.example.backend.domain.service.impl.PrefectureServiceImpl
-import com.example.backend.domain.service.impl.UserServiceImpl
+import com.example.backend.domain.service.impl.*
 import com.example.backend.dto.response.CommonException
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
@@ -25,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.math.max
@@ -38,10 +37,13 @@ class ProposeController {
     lateinit var prefectureServiceImpl: PrefectureServiceImpl
 
     @Autowired
-    lateinit var planElementServiceImpl : ElementServiceImpl
+    lateinit var elementServiceImpl : ElementServiceImpl
 
     @Autowired
     lateinit var planServiceImpl : PlanServiceImpl
+
+    @Autowired
+    lateinit var planElementServiceImpl : PlanElementServiceImpl
 
     @GetMapping("api/v1/propose/1")
     fun proposeArea(@RequestParam token: String, @RequestBody body: ProposeAreaBody) : List<ProposeAreaResponse> {
@@ -177,7 +179,7 @@ class ProposeController {
                 val onsenList = searchOnsen(prefCode)
                 for(nowOnsen in onsenList){
                     // プランの要素テーブルに存在しなかったら追加
-                    val searchResult = planElementServiceImpl.findByName(nowOnsen.name!!)
+                    val searchResult = elementServiceImpl.findByName(nowOnsen.name!!)
                     if(searchResult.isEmpty()){
                         var saveElement = Element()
                         saveElement.name = nowOnsen.name
@@ -185,7 +187,7 @@ class ProposeController {
                         saveElement.body = nowOnsen.address
                         saveElement.createdAt = Date()
                         saveElement.updateAt = Date()
-                        planElementServiceImpl.save(saveElement)
+                        elementServiceImpl.save(saveElement)
                     }
 
                     // Planの作成
@@ -198,6 +200,62 @@ class ProposeController {
                     nowOnsenPlan.createdAt = Date()
                     nowOnsenPlan.updateAt = Date()
                     planServiceImpl.save(nowOnsenPlan)
+
+                    // Elementを作成して、plan_elementsに登録
+                    // Elementを作成(行き->温泉->帰りのみ)
+                    var goElement = Element()
+                    goElement.name = "移動"
+                    goElement.linkUrl = "none"
+                    goElement.body = "行き"
+                    goElement.createdAt = Date()
+                    goElement.updateAt = Date()
+                    elementServiceImpl.save(goElement)
+
+                    var onsenElement = elementServiceImpl.findByName(nowOnsen.name!!)[0]
+
+                    var returnElement = Element()
+                    returnElement.name = "移動"
+                    returnElement.linkUrl = "none"
+                    returnElement.body = "帰り"
+                    returnElement.createdAt = Date()
+                    returnElement.updateAt = Date()
+                    elementServiceImpl.save(returnElement)
+                    // plan_elementsにいい感じに登録
+                    var calendar = Calendar.getInstance()
+                    calendar.time = body.from_date
+
+                    var goPlanElement = PlanElement()
+                    goPlanElement.plan_id = nowOnsenPlan.id
+                    goPlanElement.element_id = goElement.id
+                    goPlanElement.seq = 1
+                    goPlanElement.from_date = calendar.time
+                    calendar.add(Calendar.HOUR_OF_DAY, 2)
+                    goPlanElement.to_date = calendar.time
+                    goPlanElement.createdAt = Date()
+                    goPlanElement.updateAt = Date()
+                    planElementServiceImpl.save(goPlanElement)
+
+                    var onsenPlanElement = PlanElement()
+                    onsenPlanElement.plan_id = nowOnsenPlan.id
+                    onsenPlanElement.element_id = onsenElement.id
+                    onsenPlanElement.seq = 2
+                    onsenPlanElement.from_date = calendar.time
+                    calendar.add(Calendar.HOUR_OF_DAY, 2)
+                    onsenPlanElement.to_date = calendar.time
+                    onsenPlanElement.createdAt = Date()
+                    onsenPlanElement.updateAt = Date()
+                    planElementServiceImpl.save(onsenPlanElement)
+
+                    var returnPlanElement = PlanElement()
+                    returnPlanElement.plan_id = nowOnsenPlan.id
+                    returnPlanElement.element_id = returnElement.id
+                    returnPlanElement.seq = 3
+                    returnPlanElement.from_date = calendar.time
+                    calendar.add(Calendar.HOUR_OF_DAY, 2)
+                    returnPlanElement.to_date = calendar.time
+                    returnPlanElement.createdAt = Date()
+                    returnPlanElement.updateAt = Date()
+                    planElementServiceImpl.save(returnPlanElement)
 
                     // TopPlanItemに変換
                     var nowOnsenPlanItem = TopPlanItem()
