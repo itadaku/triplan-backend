@@ -1,12 +1,16 @@
 package com.example.backend.controller
 
 import com.example.backend.domain.models.Element
+import com.example.backend.domain.models.Plan
 import com.example.backend.domain.models.request.ProposeAreaBody
 import com.example.backend.domain.models.request.ProposePlanBody
 import com.example.backend.domain.models.response.PlanTag
 import com.example.backend.domain.models.response.ProposeAreaResponse
+import com.example.backend.domain.models.response.ProposePlanResponse
+import com.example.backend.domain.models.response.TopPlanItem
 import com.example.backend.domain.models.util.OnsenData
 import com.example.backend.domain.service.impl.ElementServiceImpl
+import com.example.backend.domain.service.impl.PlanServiceImpl
 import com.example.backend.domain.service.impl.PrefectureServiceImpl
 import com.example.backend.domain.service.impl.UserServiceImpl
 import com.example.backend.dto.response.CommonException
@@ -35,6 +39,9 @@ class ProposeController {
 
     @Autowired
     lateinit var planElementServiceImpl : ElementServiceImpl
+
+    @Autowired
+    lateinit var planServiceImpl : PlanServiceImpl
 
     @GetMapping("api/v1/propose/1")
     fun proposeArea(@RequestParam token: String, @RequestBody body: ProposeAreaBody) : List<ProposeAreaResponse> {
@@ -151,7 +158,8 @@ class ProposeController {
     }
 
     @GetMapping("api/v1/propose/2")
-    fun proposePlan(@RequestParam token: String, @RequestBody body: ProposePlanBody) : String{
+    fun proposePlan(@RequestParam token: String, @RequestBody body: ProposePlanBody) : ProposePlanResponse {
+        var res = ProposePlanResponse()
         // TOKENの確認
         val findUser = userServiceImpl.findByToken(token)
         if(findUser.isEmpty()){
@@ -179,11 +187,36 @@ class ProposeController {
                         saveElement.updateAt = Date()
                         planElementServiceImpl.save(saveElement)
                     }
+
+                    // Planの作成
+                    var nowOnsenPlan = Plan()
+                    nowOnsenPlan.title = "日帰り " + nowOnsen.name + " 旅行"
+                    nowOnsenPlan.daysNights = 1
+                    nowOnsenPlan.minBudget = 0
+                    nowOnsenPlan.maxBudget = 100000
+                    nowOnsenPlan.numberOfPeople = 1
+                    nowOnsenPlan.createdAt = Date()
+                    nowOnsenPlan.updateAt = Date()
+                    planServiceImpl.save(nowOnsenPlan)
+
+                    // TopPlanItemに変換
+                    var nowOnsenPlanItem = TopPlanItem()
+                    nowOnsenPlanItem.id = nowOnsenPlan.id
+                    nowOnsenPlanItem.title = nowOnsenPlan.title
+                    nowOnsenPlanItem.days_nights = nowOnsenPlan.daysNights
+                    nowOnsenPlanItem.min_budget = nowOnsenPlan.minBudget
+                    nowOnsenPlanItem.max_budget = nowOnsenPlan.maxBudget
+                    nowOnsenPlanItem.number_of_people = nowOnsenPlan.numberOfPeople
+                    nowOnsenPlanItem.review = 0.0
+                    nowOnsenPlanItem.image = "none"
+                    nowOnsenPlanItem.purpose += "温泉"
+
+                    res.propose_plans += nowOnsenPlanItem
                 }
             }
         }
 
-        return "Success"
+        return res
     }
 
     @GetMapping("api/v1/propose/tags")
