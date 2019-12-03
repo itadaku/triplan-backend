@@ -72,11 +72,24 @@ class PlanController {
     }
 
     @GetMapping("api/v1/plan/info")
-    fun getPlanInfo(@RequestParam id: Int) : List<PlanInfoResponse> {
-        val res = mutableListOf<PlanInfoResponse>()
+    fun getPlanInfo(@RequestParam id: Int) : PlanInfoResponse {
+        val res = PlanInfoResponse()
+
+        val sampleTopPlan1 = TopPlanItem()
+        sampleTopPlan1.id = 1
+        sampleTopPlan1.title = "Sample Plan 1"
+        sampleTopPlan1.image = "none"
+        sampleTopPlan1.review = 3.5
+        sampleTopPlan1.days_nights = 3
+        sampleTopPlan1.min_budget = 25000
+        sampleTopPlan1.max_budget = 30000
+        sampleTopPlan1.number_of_people = 2
+        sampleTopPlan1.purpose += "海"
+        sampleTopPlan1.purpose += "国内"
+        res.plan = sampleTopPlan1
 
         if(id in 1..3){
-            val planInfo1 = PlanInfoResponse()
+            val planInfo1 = PlanInfoItem()
             planInfo1.id = 1
             planInfo1.title = "移動"
             planInfo1.body = "車"
@@ -84,9 +97,9 @@ class PlanController {
             planInfo1.end_time = Date(1557280800L*1000)
             planInfo1.image_path = "none"
             planInfo1.type = PlanType.MOVE.id
-            res += planInfo1
+            res.schedules += planInfo1
 
-            val planInfo2 = PlanInfoResponse()
+            val planInfo2 = PlanInfoItem()
             planInfo2.id = 2
             planInfo2.title = "海"
             planInfo2.body = "海"
@@ -94,9 +107,9 @@ class PlanController {
             planInfo2.end_time = Date(1557284400L*1000)
             planInfo2.image_path = "none"
             planInfo2.type = PlanType.SPOT.id
-            res += planInfo2
+            res.schedules += planInfo2
 
-            val planInfo3 = PlanInfoResponse()
+            val planInfo3 = PlanInfoItem()
             planInfo3.id = 3
             planInfo3.title = "昼食"
             planInfo3.body = "海の家で昼食"
@@ -104,9 +117,9 @@ class PlanController {
             planInfo3.end_time = Date(1557288000L*1000)
             planInfo3.image_path = "none"
             planInfo3.type = PlanType.SPOT.id
-            res += planInfo3
+            res.schedules += planInfo3
 
-            val planInfo4 = PlanInfoResponse()
+            val planInfo4 = PlanInfoItem()
             planInfo4.id = 4
             planInfo4.title = "移動"
             planInfo4.body = "車"
@@ -114,27 +127,27 @@ class PlanController {
             planInfo4.end_time = Date(1557289800L*1000)
             planInfo4.image_path = "none"
             planInfo4.type = PlanType.MOVE.id
-            res += planInfo4
+            res.schedules += planInfo4
 
-            val planInfo5 = PlanInfoResponse()
-            planInfo5.id = 4
+            val planInfo5 = PlanInfoItem()
+            planInfo5.id = 5
             planInfo5.title = "観光"
             planInfo5.body = "美術館"
             planInfo5.start_time = Date(1557289800L*1000)
             planInfo5.end_time = Date(1557298800L*1000)
             planInfo5.image_path = "none"
             planInfo5.type = PlanType.SPOT.id
-            res += planInfo5
+            res.schedules += planInfo5
 
-            val planInfo6 = PlanInfoResponse()
-            planInfo6.id = 4
+            val planInfo6 = PlanInfoItem()
+            planInfo6.id = 6
             planInfo6.title = "移動"
             planInfo6.body = "帰宅"
             planInfo6.start_time = Date(1557298800L*1000)
             planInfo6.end_time = Date(1557302400L*1000)
             planInfo6.image_path = "none"
             planInfo6.type = PlanType.MOVE.id
-            res += planInfo6
+            res.schedules += planInfo6
         }
 
         return res
