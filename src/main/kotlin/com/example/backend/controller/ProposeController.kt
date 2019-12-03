@@ -185,8 +185,8 @@ class ProposeController {
                     @RequestParam prefecture_id: Int,
                     @RequestParam from_date: String,
                     @RequestParam to_date: String,
-                    @RequestParam plan_tags: List<Int>) : ProposePlanResponse {
-        var res = ProposePlanResponse()
+                    @RequestParam plan_tags: List<Int>) : List<TopPlanItem> {
+        var res : List<TopPlanItem> = mutableListOf()
         // TOKENの確認
         val findUser = userServiceImpl.findByToken(token)
         if(findUser.isEmpty()){
@@ -310,7 +310,7 @@ class ProposeController {
                     nowOnsenPlanItem.image = "onsen.jpg"
                     nowOnsenPlanItem.purpose += "温泉"
 
-                    res.propose_plans += nowOnsenPlanItem
+                    res += nowOnsenPlanItem
                 }
             }
         }
