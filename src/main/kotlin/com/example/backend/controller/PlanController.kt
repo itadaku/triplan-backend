@@ -34,7 +34,7 @@ class PlanController {
         val sampleTopPlan1 = TopPlanItem()
         sampleTopPlan1.id = 1
         sampleTopPlan1.title = "Sample Plan 1"
-        sampleTopPlan1.image = "none"
+        sampleTopPlan1.image = "onsen.jpg"
         sampleTopPlan1.review = 3.5
         sampleTopPlan1.days_nights = 3
         sampleTopPlan1.min_budget = 25000
@@ -48,7 +48,7 @@ class PlanController {
         val sampleTopPlan2 = TopPlanItem()
         sampleTopPlan2.id = 2
         sampleTopPlan2.title = "Sample Plan 2"
-        sampleTopPlan2.image = "none"
+        sampleTopPlan2.image = "onsen.jpg"
         sampleTopPlan2.review = 4.1
         sampleTopPlan2.days_nights = 2
         sampleTopPlan2.min_budget = 200000
@@ -66,7 +66,7 @@ class PlanController {
         val sampleTopPlan3 = TopPlanItem()
         sampleTopPlan3.id = 3
         sampleTopPlan3.title = "Sample Plan 3"
-        sampleTopPlan3.image = "none"
+        sampleTopPlan3.image = "onsen.jpg"
         sampleTopPlan3.review = 2.0
         sampleTopPlan3.days_nights = 1
         sampleTopPlan3.min_budget = 40000
@@ -178,7 +178,7 @@ class PlanController {
             topPlan.min_budget = searchedPlan.minBudget
             topPlan.max_budget = searchedPlan.maxBudget
             topPlan.number_of_people = searchedPlan.numberOfPeople
-            topPlan.image = "none"
+            topPlan.image = "onsen.jpg"
             topPlan.review = 0.0
             topPlan.purpose += "温泉"
             res.plan = topPlan
@@ -192,13 +192,14 @@ class PlanController {
                 nowPlanInfo.id = nowPlanElement.id
                 nowPlanInfo.title = nowElement.name
                 nowPlanInfo.body = nowElement.body
-                nowPlanInfo.image_path = "none"
+                nowPlanInfo.image_path = "onsen.jpg"
                 nowPlanInfo.start_time = nowPlanElement.from_date
                 nowPlanInfo.end_time = nowPlanElement.to_date
                 nowPlanInfo.type = PlanType.SPOT.id
                 nowPlanInfo.days = 1
                 if(nowPlanInfo.title == "移動"){
                     nowPlanInfo.type = PlanType.MOVE.id
+                    nowPlanInfo.image_path = "train.jpg"
                 }
 
                 res.schedules += nowPlanInfo
