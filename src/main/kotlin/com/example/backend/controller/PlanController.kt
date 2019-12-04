@@ -316,7 +316,7 @@ class PlanController {
         planUser.updateAt = Date()
         planUserServiceImpl.save(planUser)
 
-        return "Success"
+        return "{\"done\": true}"
     }
 
     @GetMapping("api/v1/plan/now")
@@ -352,6 +352,6 @@ class PlanController {
             }
         }
 
-        return "Success"
+        return "{\"done\": true}"
     }
 }
