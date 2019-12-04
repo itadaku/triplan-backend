@@ -1,9 +1,6 @@
-package com.example.backend.domain.models
+package com.example.backend.domain.models.response
 
-import javax.persistence.Entity
-import javax.persistence.Id
-
-data class TopPlan (
+data class PlanItem (
     var id: Int? = null,
     var title: String? = null,
     var image: String? = null,
@@ -12,5 +9,6 @@ data class TopPlan (
     var min_budget: Int? = null,
     var max_budget: Int? = null,
     var number_of_people: Int? = null,
+    var address: String? = null,
     var purpose: List<String> = listOf()
 )

@@ -1,6 +1,7 @@
 package com.example.backend.controller
 
 import com.example.backend.domain.models.User
+import com.example.backend.domain.models.response.TestResponse
 import com.example.backend.domain.service.impl.UserServiceImpl
 import com.example.backend.dto.response.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,6 +39,14 @@ class UserController {
         return "Hello World"
     }
 
+    @GetMapping("/api/v1/test")
+    fun testApi(): TestResponse {
+        var testResponse = TestResponse()
+        testResponse.message = "hello"
+        testResponse.triplan_message = "hello triplan"
+        return testResponse
+    }
+
     @PostMapping("api/v1/user/register")
     fun registUser(@RequestBody user: User): User {
         val findByNameUsers = userServiceImpl.findByName(user.name)
@@ -56,7 +65,7 @@ class UserController {
         // トークンを作成
         user.token = createToken()
         val saveUser = userServiceImpl.save(user)
-        saveUser.id = null
+//        saveUser.id = null
         saveUser.password = null
         saveUser.createdAt = null
         saveUser.updatedAt = null
@@ -73,7 +82,7 @@ class UserController {
         }
 
         val responseUser = findUser[0]
-        responseUser.id = null
+//        responseUser.id = null
         responseUser.password = null
         responseUser.createdAt = null
         responseUser.updatedAt = null
@@ -90,7 +99,7 @@ class UserController {
         }
 
         val responseUser = findUser[0]
-        responseUser.id = null
+//        responseUser.id = null
         responseUser.password = null
         responseUser.createdAt = null
         responseUser.updatedAt = null
@@ -134,12 +143,12 @@ class UserController {
         }
         if(user.age != null) findUser[0].age = user.age
         if(user.gender != null) findUser[0].gender = user.gender
-        if(user.lineStationId != null) findUser[0].lineStationId = user.lineStationId
+        if(user.line_station_id != null) findUser[0].line_station_id = user.line_station_id
 
         userServiceImpl.updateUser(findUser[0])
 
         val responseUser = findUser[0]
-        responseUser.id = null
+//        responseUser.id = null
         responseUser.password = null
         responseUser.createdAt = null
         responseUser.updatedAt = null

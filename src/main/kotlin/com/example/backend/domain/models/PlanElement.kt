@@ -1,23 +1,27 @@
 package com.example.backend.domain.models
 
-import java.sql.Date
+import java.util.Date
 import javax.persistence.*
 
 @Entity
 @Table(name = "plan_elements")
 data class PlanElement (
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    val id: Int? = null,
-    @Column(name = "name")
-    val name: String? = null,
-    @Column(name = "body")
-    val body: String? = null,
-    @Column(name = "link_url")
-    val linkUrl: String? = null,
+    var id: Int? = null,
+    @Column(name = "plan_id")
+    var plan_id: Int? = null,
+    @Column(name = "element_id")
+    var element_id: Int? = null,
+    @Column(name = "seq")
+    var seq: Int? = null,
+    @Column(name = "from_date")
+    var from_date: Date? = null,
+    @Column(name = "to_date")
+    var to_date: Date? = null,
     @Column(name = "created_at")
-    val createdAt: Date? = null,
-    @Column(name = "update_at")
-    val updateAt: Date? = null
+    var createdAt: Date? = null,
+    @Column(name = "updated_at")
+    var updateAt: Date? = null
 )

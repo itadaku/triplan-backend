@@ -16,6 +16,6 @@ data class PlanPurpose (
     val purposeId: Int? = null,
     @Column(name = "created_at")
     val createdAt: Date? = null,
-    @Column(name = "update_at")
+    @Column(name = "updated_at")
     val updateAt: Date? = null
 )

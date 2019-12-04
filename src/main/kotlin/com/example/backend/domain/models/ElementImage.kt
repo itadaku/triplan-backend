@@ -16,6 +16,6 @@ data class ElementImage (
     val imagePath: String? = null,
     @Column(name = "created_at")
     val createdAt: Date? = null,
-    @Column(name = "update_at")
+    @Column(name = "updated_at")
     val updateAt: Date? = null
 )
