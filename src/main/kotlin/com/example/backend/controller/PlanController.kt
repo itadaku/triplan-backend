@@ -292,7 +292,7 @@ class PlanController {
     }
 
     @PostMapping("api/v1/plan/now")
-    fun postNowPlan(@RequestParam token: String, @RequestParam plan_id: Int) : String{
+    fun postNowPlan(@RequestParam token: String, @RequestParam plan_id: Int) : DoneResponse{
         val findUser = userServiceImpl.findByToken(token)
         if(findUser.isEmpty()){
             throw CommonException("Invalid Token", HttpStatus.BAD_REQUEST)
@@ -316,7 +316,10 @@ class PlanController {
         planUser.updateAt = Date()
         planUserServiceImpl.save(planUser)
 
-        return "{\"done\": true}"
+
+        var res = DoneResponse()
+        res.done = true
+        return res
     }
 
     @GetMapping("api/v1/plan/now")
@@ -338,7 +341,7 @@ class PlanController {
     }
 
     @DeleteMapping("api/v1/plan/now")
-    fun deleteNowPlan(@RequestParam token: String) : String {
+    fun deleteNowPlan(@RequestParam token: String) : DoneResponse {
         val findUser = userServiceImpl.findByToken(token)
         if(findUser.isEmpty()){
             throw CommonException("Invalid Token", HttpStatus.BAD_REQUEST)
@@ -352,6 +355,8 @@ class PlanController {
             }
         }
 
-        return "{\"done\": true}"
+        var res = DoneResponse()
+        res.done = true
+        return res
     }
 }
